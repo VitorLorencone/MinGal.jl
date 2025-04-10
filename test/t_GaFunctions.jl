@@ -39,3 +39,4 @@ Al3D = Setup(3)
 @test (1+e1+e2+e3+e1e2+e1e3+e2e3+e1e2e3)*(1+e1+e2+e3+e1e2+e1e3+e2e3+e1e2e3) == 4*e2 + 4*e1e2 + 4*e2e3 + 4*e1e2e3
 @test (1+e1+e2+e3+e1e2+e1e3+e2e3+e1e2e3)|(1+e1+e2+e3+e1e2+e1e3+e2e3+e1e2e3) == 4*e2 + 4*e1e2 + 4*e2e3 + 2*e1e2e3
 @test (1+e1+e2+e3+e1e2+e1e3+e2e3+e1e2e3)^(1+e1+e2+e3+e1e2+e1e3+e2e3+e1e2e3) == 1 + 2*e1 + 2*e2 + 2*e3 + 2*e1e2 + 2*e1e3 + 2*e2e3 + 4*e1e2e3
+@test e1e2 + 2*e3|((3*e1 + 4*e1e2) | (e1e2e3)) == e1e2 - 6*e2 - 8

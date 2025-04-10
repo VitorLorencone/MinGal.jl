@@ -30,7 +30,6 @@ function rawBladeGeometricProduct(ei::Blade, ej::Blade, Al::Algebra = CurrentAlg
         return bladeScalarProduct(ei, bladescalar(ej))
     end
         
-
     if i[1][1] == 0
         return ej
     elseif j[1][1] == 0
