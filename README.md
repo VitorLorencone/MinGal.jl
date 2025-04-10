@@ -1,4 +1,4 @@
-[![](https://img.shields.io/badge/docs-stable-blue.svg)](https://vitorlorencone.github.io/Mingal.jl/)
+[![](https://img.shields.io/badge/docs-stable-blue.svg)](https://vitorlorencone.github.io/MinGal.jl/)
 
 # MINGAL
 
