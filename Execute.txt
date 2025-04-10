@@ -1,5 +1,0 @@
-pkg> add .
-using Mingal
-
-em /docs
-julia --project make.jl
