@@ -159,7 +159,7 @@ The Scale value.
 
 """
 function getScale(ei::Multivector, k::Number)::Number
-    return ei.val.nzval[k]
+    return ei.val[k]
 end
 
 
@@ -179,5 +179,5 @@ The Scale value.
 """
 function getScale(ei::Multivector, symbol::String)::Number
     index = findfirst(==(symbol), [tupla[1] for tupla in Mingal.CurrentAlgebra.Basis])
-    return ei.val.nzval[index]
+    return ei.val[index]
 end
