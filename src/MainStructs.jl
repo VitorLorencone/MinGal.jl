@@ -80,7 +80,7 @@ function Base.show(io::IO, a::AbstractGeometricAlgebraType)
         elseif ind[i] == 1 && val[i] > 0
             ans = ans * string(val[i]) * " "
         elseif ind[i] == 1 && val[i] < 0
-            ans = ans * "- " * string(val[i]) * " "
+            ans = ans * "- " * string(abs(val[i])) * " "
         elseif ind[i] == 1 && val[i] == 0 && length(ind) == 1
             ans = "0.0 "
         end
