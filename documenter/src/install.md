@@ -2,7 +2,7 @@
 
 ```@setup set
 using Mingal
-Setup(3)
+Algebra(3)
 ```
 
 *How to install*
@@ -21,10 +21,10 @@ Now, for start Mingal, return to Julia mode in REPL and type:
 julia> using Mingal
 ```
 
-The second step to use Mingal is define an Algebra, an environment. The environment is defined through the `Setup()` function such as:
+The second step to use Mingal is define an Algebra, an environment. The environment is defined through the `Algebra()` function such as:
 
 ```julia
-julia> Setup(3, 0)
+julia> Algebra(3, 0)
 ```
 
 In this case, were created the 3D space. More information about the created space, is just showed in the REPL. By now, try to execute the following command:

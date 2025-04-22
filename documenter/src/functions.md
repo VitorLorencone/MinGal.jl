@@ -6,18 +6,18 @@ using Mingal
 
 *What are the main functions and what they do*
 
-## Setup()
+## Algebra()
 
-Setup() is the most important function of any system with this library, as it defines an environment, that is, an algebra that will be used to handle future operations. Thus, as its definition follows, we have:
+Algebra() is the most important function of any system with this library, as it defines an environment, that is, an algebra that will be used to handle future operations. Thus, as its definition follows, we have:
 
 ```@docs
-Mingal.Setup
+Mingal.Algebra
 ```
 
 Which allows us to create spaces like the following, representing the imaginary set:
 
 ```@example ss
-Setup(0,1,["i"])
+Algebra(0,1,["i"])
 ```
 
 ## Blades
@@ -25,7 +25,7 @@ Setup(0,1,["i"])
 All types introduced in Mingal are subtype of `AbstractGeometricAlgebraType`. Blade type is the most primitive subtype wich is used to define more complete structures, like Multivectors. Once we define an Algebra, a set of Blade is created. For example, let us create the space R3.
 
 ```@example ss
-Setup(3)
+Algebra(3)
 ```
 
 Now, the elements `id`, `e1`, `e2`, `e3`, `e1e2`, `e1e3`, `e2e3`, `e1e2e3` were created, representing the basis blades of the Algebra.
@@ -122,12 +122,12 @@ e3*e1 == -e1e3
 
 ### Inner Product
 
-The inner product is another type of operation defined for Geometric Algebra and is represented within Mingal by the symbol `|`.
+The inner product is another type of operation defined for Geometric Algebra and is represented within Mingal by the symbol `\`.
 
 And it works as the following example:
 
 ```@repl ss
-e1e2|e1 == -e2
+e1e2\e1 == -e2
 ```
 
 ### Outer Product
@@ -147,5 +147,5 @@ The products can be used in whichever way is preferred, including all mixed toge
 And it works as the following example:
 
 ```@repl ss
-(1+2*e1)|(5e1e2^e2) == 0.0*id
+(1+2*e1)\(5e1e2^e2) == 0.0*id
 ```

@@ -1,9 +1,5 @@
 # Mingal.jl
 
-```@meta
-CurrentModule = Mingal
-```
-
 *A Geometric Algebra library written in Julia*
 
 ## Overview
