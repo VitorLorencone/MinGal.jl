@@ -143,3 +143,41 @@ function bladeScalarProduct(ei::Blade, k::Number)::Blade
     finalScalar = ei.val.nzval[1] * k
     return Multivectors([ei.val.nzind[1]], [finalScalar])
 end
+
+"""
+    getScale(ei, k)::Number
+
+Function that returns the Scale value in index k from multivector ei.
+The index k follows the ordered set of basis, the same shown in AlgebraStruct.Basis
+
+# Arguments
+- `ei::Multivector` : A Multivector.
+- `k::Number` : A scalar.
+
+# Return
+The Scale value.
+
+"""
+function getScale(ei::Multivector, k::Number)::Number
+    return ei.val.nzval[k]
+end
+
+
+"""
+    getScale(ei, symbol)::Number
+
+Function that returns the Scale value in index k from multivector ei.
+The symbol value represents the blade that you want the scale from
+
+# Arguments
+- `ei::Multivector` : A Multivector.
+- `symbol::String` : A String.
+
+# Return
+The Scale value.
+
+"""
+function getScale(ei::Multivector, symbol::String)::Number
+    index = findfirst(==(symbol), CurrentAlgebra.Basis)
+    return ei.val.nzval[index]
+end
