@@ -355,3 +355,21 @@ function multivectorOP(ei:: AbstractGeometricAlgebraType, ej::AbstractGeometricA
     end
     return result
 end
+
+"""
+    multivectorByScalar(ei:: AbstractGeometricAlgebraType, k::Number)::AbstractGeometricAlgebraType
+
+Function that computes the product by scalar of a multivectors and a scalar number and return its result.
+
+# Arguments
+- `ei::AbstractGeometricAlgebraType` : A multivector.
+- `k::Number` : A number.
+
+# Return
+The result Multivector.
+
+"""
+function multivectorByScalar(ei:: AbstractGeometricAlgebraType, k::Number)::AbstractGeometricAlgebraType
+    ei.val.nzval .*= k
+    return ei
+end

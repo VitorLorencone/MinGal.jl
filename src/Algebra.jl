@@ -25,11 +25,11 @@ end
 
 # Show Functions for Algebra Struct
 function Base.show(io::IO, a::Algebra)
-    println(io, "Algebra")
-    println(io, "p: $(a.p)")
-    println(io, "q: $(a.q)")
-    println(io, "VectorBasis: $(a.VectorBasis)")
-    print(io, "Basis: $([tupla[1] for tupla in a.Basis])")
+    println(io, "Algebra:")
+    println(io, "- p: $(a.p)")
+    println(io, "- q: $(a.q)")
+    println(io, "- VectorBasis: $(a.VectorBasis)")
+    print(io, "- Basis: $([tupla[1] for tupla in a.Basis])")
 end
 
 # Global Variable for exporting the Current Algebra

@@ -73,22 +73,22 @@ function Base.show(io::IO, a::AbstractGeometricAlgebraType)
     ans = ""
 
     for i in eachindex(ind)
-        if ind[i] > 1 && val[i] != 0.0
-            ans = ans * string(val[i]) * "*" * CurrentAlgebra.Basis[ind[i]][1] * " + "
-        elseif ind[i] == 1
-                ans = ans * string(val[i]) * " + "
+        if ind[i] > 1 && val[i] > 0
+            ans = ans * "+ " * string(round(val[i], digits=3)) * "*" * CurrentAlgebra.Basis[ind[i]][1] * " "
+        elseif ind[i] > 1 && val[i] < 0
+            ans = ans * "- " * string(round(abs(val[i]), digits=3)) * "*" * CurrentAlgebra.Basis[ind[i]][1] * " "
+        elseif ind[i] == 1 && val[i] > 0
+            ans = ans * string(val[i]) * " "
+        elseif ind[i] == 1 && val[i] < 0
+            ans = ans * "- " * string(val[i]) * " "
+        elseif ind[i] == 1 && val[i] == 0 && length(ind) == 1
+            ans = "0.0 "
+
+        if ans[1] == '+'
+            ans = ans[3:end]
         end
-    end
 
-    if val[1] == 0 && length(val) > 1 && ind[1] == 1
-        ans = ans[7:end]
-    end
+        ans = ans[1:end-1]
 
-    if length(val) == 1 && ind[1] != 1 && val[1] == 0
-        ans = "0.0" * " + "
-    end
-
-    ans = ans[1:end-2]
-
-    print(ans)
+        print(ans)
 end

@@ -13,7 +13,14 @@ function Base.:*(k::Number, ei::Blade)::Blade
     return bladeScalarProduct(ei,k)
 end
 
-function Base.:|(ei::Blade, ej::Blade)::Blade
+function Base.:*(k::Number, ei::Multivector)::Multivector
+    return multivectorByScalar(ei, k)
+end
+function Base.:*(ei::Multivector, k::Number)::Multivector
+    return multivectorByScalar(ei, k)
+end
+
+function Base.:\(ei::Blade, ej::Blade)::Blade
     return bladeInnerProduct(ei,ej)
 end
 
@@ -62,13 +69,13 @@ function Base.:*(ei::Multivector, ej::Blade)::AbstractGeometricAlgebraType
     return multivectorGP(ei, ej)
 end
 
-function Base.:|(ei::Multivector, ej::Multivector)::AbstractGeometricAlgebraType
+function Base.:\(ei::Multivector, ej::Multivector)::AbstractGeometricAlgebraType
     return multivectorIP(ei, ej)
 end
-function Base.:|(ei::Blade, ej::Multivector)::AbstractGeometricAlgebraType
+function Base.:\(ei::Blade, ej::Multivector)::AbstractGeometricAlgebraType
     return multivectorIP(ei, ej)
 end
-function Base.:|(ei::Multivector, ej::Blade)::AbstractGeometricAlgebraType
+function Base.:\(ei::Multivector, ej::Blade)::AbstractGeometricAlgebraType
     return multivectorIP(ei, ej)
 end
 

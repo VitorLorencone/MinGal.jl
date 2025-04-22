@@ -60,7 +60,7 @@ If not defined, the last two parameters are automatically calculated as canonica
 Returns the created Algebra object.
 
 """
-function Setup(p = 0, q = 0, VectorBasis = CanonVectorBasis(p, q), Basis = CanonBasis(VectorBasis))::Algebra
+function Algebra(p = 0, q = 0, VectorBasis = CanonVectorBasis(p, q), Basis = CanonBasis(VectorBasis))::Algebra
 
     Al = CreateAlgebra(p, q, VectorBasis, Basis)
     CreateSymbols(Basis)
@@ -69,3 +69,6 @@ function Setup(p = 0, q = 0, VectorBasis = CanonVectorBasis(p, q), Basis = Canon
     return Al
 
 end
+
+Algebra(3)
+print(-e1*2*e2-e3+1)
