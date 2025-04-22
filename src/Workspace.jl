@@ -44,7 +44,7 @@ function CreateTables()
 end
 
 """
-    Setup(p, q, VectorBasis, Basis)::AlgebraStruct
+    Algebra(p, q, VectorBasis, Basis)::AlgebraStruct
 
 Main function for creating your Algebra and adding its basis blades to REPL.
 Constructor Function of an algebraic object with parameters p, q, R^{p, q}, and its multivector space.
