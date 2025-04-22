@@ -370,6 +370,7 @@ The result Multivector.
 
 """
 function multivectorByScalar(ei:: AbstractGeometricAlgebraType, k::Number)::AbstractGeometricAlgebraType
-    ei.val.nzval .*= k
-    return ei
+    result = ei
+    result.val.nzval .*= k
+    return result
 end

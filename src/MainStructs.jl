@@ -86,11 +86,15 @@ function Base.show(io::IO, a::AbstractGeometricAlgebraType)
         end
     end
 
+    if length(ans) > 0
         if ans[1] == '+'
             ans = ans[3:end]
         end
+    else
+        ans = "0.0 "
+    end
 
-        ans = ans[1:end-1]
+    ans = ans[1:end-1]
 
-        print(ans)
+    print(ans)
 end

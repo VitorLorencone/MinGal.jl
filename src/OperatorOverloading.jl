@@ -19,6 +19,9 @@ end
 function Base.:*(ei::Multivector, k::Number)::Multivector
     return multivectorByScalar(ei, k)
 end
+function Base.:/(ei::Multivector, k::Number)::Multivector
+    return multivectorByScalar(ei, 1/k)
+end
 
 function Base.:\(ei::Blade, ej::Blade)::Blade
     return bladeInnerProduct(ei,ej)
