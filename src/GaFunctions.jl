@@ -7,13 +7,13 @@ Function that returns the indexes of a blade.
 
 # Arguments
 - `vec::Blade` : A Blade.
-- `Al::Algebra` : The Algebra, it is setted as CurrentAlgebra.
+- `Al::AlgebraStruct` : The Algebra, it is setted as CurrentAlgebra.
 
 # Return
 Returns an array with all indexes of that blade.
 
 """
-function bladeindex(vec::Blade, Al::Algebra = CurrentAlgebra)::Array{}
+function bladeindex(vec::Blade, Al::AlgebraStruct = CurrentAlgebra)::Array{}
     return Al.Indexes[vec.val.nzind]
 end
 
@@ -103,13 +103,13 @@ Function that returns the Scalar Product between two basis blades.
 # Arguments
 - `ei::Blade` : A Blade.
 - `ej::Blade` : A Blade.
-- `Al::Algebra` : The Algebra, it is setted as CurrentAlgebra.
+- `Al::AlgebraStruct` : The Algebra, it is setted as CurrentAlgebra.
 
 # Return
 The result Integer.
 
 """
-function scalarproduct(ei::Blade, ej::Blade, Al::Algebra = CurrentAlgebra)::Int
+function scalarproduct(ei::Blade, ej::Blade, Al::AlgebraStruct = CurrentAlgebra)::Int
     i = bladeindex(ei)[1]
     j = bladeindex(ej)[1]
 

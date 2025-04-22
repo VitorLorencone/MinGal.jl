@@ -43,13 +43,13 @@ Constructor function for creating either blades or multivectors, done automatica
 # Arguments
 - `baseVectors::Array` : An array of integers, representing the actual basis blade that exists in this object in order.
 - `scalars::Array` : An array of integers, representing the scalars of each basis blade in order.
-- `Al::Algebra` : The Algebra, it is setted as CurrentAlgebra.
+- `Al::AlgebraStruct` : The Algebra, it is setted as CurrentAlgebra.
 
 # Return
 Returns an AbstractGeometricAlgebraType.
 
 """
-function Multivectors(baseVectors::Array, scalars::Array, Al::Algebra = CurrentAlgebra)
+function Multivectors(baseVectors::Array, scalars::Array, Al::AlgebraStruct = CurrentAlgebra)
 
     max = 2^(Al.p + Al.q)
 

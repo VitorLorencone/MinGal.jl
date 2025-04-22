@@ -9,13 +9,13 @@ It is used for the Operation Table, it is high cost for single operations over t
 # Arguments
 - `ei::Blade` : A Blade.
 - `ej::Blade` : A Blade.
-- `Al::Algebra` : The Algebra, it is setted as CurrentAlgebra.
+- `Al::AlgebraStruct` : The Algebra, it is setted as CurrentAlgebra.
 
 # Return
 The result Blade.
 
 """
-function rawBladeGeometricProduct(ei::Blade, ej::Blade, Al::Algebra = CurrentAlgebra)::Blade
+function rawBladeGeometricProduct(ei::Blade, ej::Blade, Al::AlgebraStruct = CurrentAlgebra)::Blade
     i = bladeindex(ei)
     j = bladeindex(ej)
 
@@ -90,10 +90,10 @@ end
 Function that creates the Operation Table for the Geometric Product.
 
 # Arguments
-- `Al::Algebra` : The Algebra, it is setted as CurrentAlgebra.
+- `Al::AlgebraStruct` : The Algebra, it is setted as CurrentAlgebra.
 
 """
-function CreateGPTable(Al::Algebra = CurrentAlgebra)
+function CreateGPTable(Al::AlgebraStruct = CurrentAlgebra)
     size = 2^(Al.p + Al.q)
     Table = Array{Any,2}(undef,size,size)
 
@@ -155,15 +155,15 @@ function rawBladeOuterProduct(ei::Blade, ej::Blade, GPTable::Array{Any,2} = Crea
 end
 
 """
-    CreateIPTable(Al::Algebra)
+    CreateIPTable(Al::AlgebraStruct)
 
 Function that creates the Operation Table for the Inner Product.
 
 # Arguments
-- `Al::Algebra` : The Algebra, it is setted as CurrentAlgebra.
+- `Al::AlgebraStruct` : The Algebra, it is setted as CurrentAlgebra.
 
 """
-function CreateIPTable(GPTable::Array{Any,2} = GPTable, Al::Algebra = CurrentAlgebra)
+function CreateIPTable(GPTable::Array{Any,2} = GPTable, Al::AlgebraStruct = CurrentAlgebra)
     size = 2^(Al.p + Al.q)
     Table = Array{Any,2}(undef,size,size)
 
@@ -177,15 +177,15 @@ function CreateIPTable(GPTable::Array{Any,2} = GPTable, Al::Algebra = CurrentAlg
 end
 
 """
-    CreateOPTable(Al::Algebra)
+    CreateOPTable(Al::AlgebraStruct)
 
 Function that creates the Operation Table for the Outer Product.
 
 # Arguments
-- `Al::Algebra` : The Algebra, it is setted as CurrentAlgebra.
+- `Al::AlgebraStruct` : The Algebra, it is setted as CurrentAlgebra.
 
 """
-function CreateOPTable(GPTable::Array{Any,2} = GPTable, Al::Algebra = CurrentAlgebra)
+function CreateOPTable(GPTable::Array{Any,2} = GPTable, Al::AlgebraStruct = CurrentAlgebra)
     size = 2^(Al.p + Al.q)
     Table = Array{Any,2}(undef,size,size)
 
@@ -206,13 +206,13 @@ Function that returns the Geometric Product between two blades with the Operatio
 # Arguments
 - `ei::Blade` : A Blade.
 - `ej::Blade` : A Blade.
-- `Al::Algebra` : The Algebra, it is setted as CurrentAlgebra.
+- `Al::AlgebraStruct` : The Algebra, it is setted as CurrentAlgebra.
 
 # Return
 The result Blade.
 
 """
-function bladeGeometricProduct(ei::Blade, ej::Blade, Al::Algebra = CurrentAlgebra)::Blade
+function bladeGeometricProduct(ei::Blade, ej::Blade, Al::AlgebraStruct = CurrentAlgebra)::Blade
     return GPTable[ei.val.nzind[1], ej.val.nzind[1]] * bladescalar(ei) * bladescalar(ej)
 end
 

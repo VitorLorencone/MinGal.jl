@@ -5,7 +5,7 @@ TODO: Treat Errors
 
 module Mingal
 
-export Algebra, id
+export AlgebraStruct, Algebra, id
 export Multivectors, Blade, Multivector
 export grade, gradeprojection
 
