@@ -69,6 +69,3 @@ function Algebra(p = 0, q = 0, VectorBasis = CanonVectorBasis(p, q), Basis = Can
     return Al
 
 end
-
-Algebra(3)
-print(-e1*2*e2-e3+1)
