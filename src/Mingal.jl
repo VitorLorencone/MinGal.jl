@@ -7,7 +7,7 @@ module Mingal
 
 export AlgebraStruct, Algebra, id
 export Multivectors, Blade, Multivector
-export grade, gradeprojection
+export grade, gradeprojection, getScale
 
 include("Workspace.jl")
 
