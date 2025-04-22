@@ -2,7 +2,7 @@ include("../src/Mingal.jl")
 using .Mingal
 using Test
 
-AlD3 = Setup(3)
+AlD3 = Algebra(3)
 
 @test Multivector <: Mingal.AbstractGeometricAlgebraType
 @test Blade <: Mingal.AbstractGeometricAlgebraType
