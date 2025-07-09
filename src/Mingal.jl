@@ -1,14 +1,8 @@
-#=
-TODO: Add function LoadAlgebra
-TODO: Treat Errors
-=#
-
-module Mingal
-
-export AlgebraStruct, Algebra, id
-export Multivectors, Blade, Multivector
-export grade, gradeprojection, getScale
+module MinGal
 
 include("Workspace.jl")
+
+export Algebra, id
+export Multivector, Blade
 
 end

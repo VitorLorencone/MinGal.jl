@@ -1,90 +1,120 @@
-include("Combinations.jl")
+import Combinatorics
+using .Combinatorics
 
 """
-    CanonVectorBasis(p, q)::Array{String}
+    canon_symbols(p, [q], [r])::Array{String}
 
-Function that writes the canonical vector space, given the parameters p and q for definition
+Function that writes the canonical vector space symbols, given the parameters p, q and r for definition
 
 # Arguments
-- `p::Int` : The first parameter of the definition
-- `q::Int` : The second parameter of the definition
+- `p::Int` : Represents the ammount of positive dimensions
+- `q::Int` : Represents the ammount of negative dimensions
+- `r::Int` : Represents the ammount of zero dimensions
 
 # Return
 Return an array of strings with all the necessary elements for this space.
 
 """
-function CanonVectorBasis(p::Int, q::Int = 0)::Array{String}
+function canon_symbols(p::Int, q::Int = 0, r::Int = 0)::Array{String}
 
-    if(p < 0) 
-        throw(DomainError(p,"The parameter p must be greater than 0"))
+    if(p < 0)
+        throw(DomainError(p,"The parameter 'p' must be greater than or equal to 0"))
     elseif(q < 0)
-        throw(DomainError(q,"The parameter q must be greater than 0"))
+        throw(DomainError(q,"The parameter 'q' must be greater than or equal to 0"))
+    elseif(r < 0)
+        throw(DomainError(r,"The parameter 'r' must be greater than or equal to 0"))
     end
 
     basis::Array{String} = []
 
-    for i in 1:(p+q)
-
-        strName::String = "e" * string(i)
-        push!(basis, strName)
-
+    for i in 1:(p+q+r)
+        str_name::String = "e" * string(i)
+        push!(basis, str_name)
     end
 
     return basis
-
 end
 
 """
-    CanonBasis(VectorBasis)::Array{Tuple{String, Int}}
+    canon_basis(symbols)::Array{String}
 
 Function that lists all the combinations of canonical vectors in a given Algebra.
 
 # Arguments
-- `VectorBasis::Array{String}` : An array of strings to be combined.
+- `symbols::Array{String}` : An array of strings to be combined.
 
 # Return
-Returns a list of tuples with all combinations of the elements and its index, forming the basis of the multivector space.
+Returns a list with all combinations of the elements, forming the basis of the multivector space.
 
 """
-function CanonBasis(VectorBasis::Array{String})::Array{Tuple{String, Int}}
+function canon_basis(symbols::Array{String})::Array{String}
     
-    basis::Array{Tuple{String, Int}} = [("1", 1)]
-
-    Vector::Array{String} = []
-    for i in VectorBasis
-        push!(Vector, i)
-    end
-
-    for i in 1:length(Vector)
-        basis = vcat(basis, CombinationsTuple(Vector, i, length(basis)+1))
+    basis::Array{String} = ["1"]
+    for k in 1:length(symbols)
+        for val in combinations(symbols, k)
+            push!(basis, join(val))
+        end
     end
 
     return basis
-
 end
 
 """
-    IndexesBasis(p, q)::Array
+    canon_basis_bit_order(symbols)::Array{String}
 
-A function to return all the indexes of every canon multivector. It is used for internal calculations.
+Function that lists all the combinations of canonical vectors in a given Algebra in bit order.
 
 # Arguments
-- `p::Int` : The first parameter of the definition
-- `q::Int` : The second parameter of the definition
+- `symbols::Array{String}` : An array of strings to be combined.
 
 # Return
-Returns an Array of Arrays of integers, with all indexes in order.
+Returns a list with all combinations of the elements, forming the basis of the multivector space, in bit order.
 
 """
-function IndexesBasis(p::Int = 0, q::Int = 0)::Array{Array{Int}}
+function canon_basis_bit_order(symbols)::Array{String}
+    n = length(symbols)
+    basis = ["1"]
+    for i in 1:(2^n - 1)
+        val = String[]
+        for j in 0:(n-1)
+            if (i >> j) & 1 == 1
+                push!(val, symbols[j+1])
+            end
+        end
+        push!(basis, join(val))
+    end
+    return basis
+end
 
-    basis::Array = 1:(p+q)
-    index = [[0]]
+# TODO this is useless and inneficient by now. The best approach is to
+# create the map while creating one of the canon basis
+"""
+    binary_index_map(base, basis)::Dict{Int, Int}
 
-    for i in 1:length(basis)
-        index = vcat(index, CombinationsArray(basis, i))
+Function that maps the index of normal and bit order.
+
+# Arguments
+- `base::Array{String}` : An array of strings to be combined.
+- `basis::Array{String}` : An array of the final combination of strings.
+
+# Return
+Returns a dict with all the mapped values.
+
+"""
+function binary_index_map(base::Array{String}, basis::Array{String})
+    n = length(base)
+    map1 = Dict{Int, Int}()
+    map2 = Dict{Int, Int}()
+    map1[0] = 1
+    map2[1] = 0
+    for i in 1:(2^n - 1)
+        bits = digits(i, base=2, pad=n)
+        str = join([base[j] for j in 1:n if bits[j] == 1])
+        k = findfirst(==(str), basis)
+        map1[i] = k
+        map2[k] = i
     end
 
-    return index
-
+    global gb_bin_to_nat = map1
+    global gb_nat_to_bin = map2
 end

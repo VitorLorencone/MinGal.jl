@@ -1,64 +1,97 @@
 include("CanonicalBasis.jl")
 
 """
-    AlgebraStruct(p, q, VectorBasis, Basis, Indexes)
+    Algebra(p, q, r, symbols, basis, basis_bit_order, metric, max)
 
 A structure to define an algebra to be worked with its respective dimensions and canonical vectors.
 
-# Arguments
-- `p::Int` : The first parameter of the definition
-- `q::Int` : The second parameter of the definition
-- `VectorBasis::Array{String}` : An Array with vectors to work with
-- `Basis::Array{Tuple{String,Int}}` : An Array with the multivector base and it's indexes
-- `Indexes::Array{Array{Int}}` : An array with all the indexes of canonical blades
+# Fields
+- `p::Int` : Represents the ammount of positive dimensions
+- `q::Int` : Represents the ammount of negative dimensions
+- `z::Int` : Represents the ammount of zero dimensions
+- `symbols::Array{String}` : Array of primary symbols for the Algebra
+- `basis::Array{String}` : Array of all symbols for the Algebra, normal order
+- `basis_bit_order::Array{String}` : Array of symbols for the Algebra, bit order
+- `metric::Array{Int8}` : Another way of representing the algebra signature
+- `max::Int` : max number of Algebra, the same as 2^(p+q+r)
 
 """
-struct AlgebraStruct
-
+struct Algebra
     p::Int
     q::Int
-    VectorBasis::Array{String}
-    Basis::Array{Tuple{String,Int}}
-    Indexes::Array{Array{Int}}
-
+    r::Int
+    symbols::Array{String}
+    basis::Array{String}
+    basis_bit_order::Array{String}
+    metric::Array{Int8}
+    max::Int
 end
-
-# Show Functions for Algebra Struct
-function Base.show(io::IO, a::AlgebraStruct)
-    println(io, "Algebra:")
-    println(io, "- p: $(a.p)")
-    println(io, "- q: $(a.q)")
-    println(io, "- VectorBasis: $(a.VectorBasis)")
-    print(io, "- Basis: $([tupla[1] for tupla in a.Basis])")
-end
-
-# Global Variable for exporting the Current Algebra
-global CurrentAlgebra::AlgebraStruct = AlgebraStruct(0, 0, [], [("1", 1)], [[0]])
 
 """
-    CreateAlgebra(p, q, VectorBasis, Basis)
+    describe(al::Algebra)
 
-Constructor Function of an algebraic object with parameters p, q, R^{p, q}, and its multivector space.
-If not defined, the last two parameters are automatically calculated as canonical.
+Describe function for showing the Algebra function.
 
 # Arguments
-- `p::Int` : The first parameter of the definition
-- `q::Int` : The second parameter of the definition
-- `VectorBasis::Array{String}` : An Array with vectors to work with
-- `Basis::Array{Tuple{String,Int}}` : An Array with the multivector base and it's indexes
+- `al::Algebra` : The algebra for printing
+
+"""
+function describe(al::Algebra)
+    println("Algebra:")
+    println("- p: $(al.p)")
+    println("- q: $(al.q)")
+    println("- r: $(al.r)")
+    println("- symbols: $(al.symbols)")
+    println("- basis: $(al.basis)")
+    println("- basis_bit_order: $(al.basis_bit_order)")
+    println("- metric: $(al.metric)")
+    println("- max: $(al.max)")
+end
+
+"""
+    create_algebra(p, [q], [r], [symbols])
+
+Constructor Function of an algebraic object with signature p, q, r. If not defined, 
+the symbols for the algebra are automatically calculated as canonical.
+
+# Arguments
+- `p::Int` : Represents the ammount of positive dimensions
+- `q::Int` : Represents the ammount of negative dimensions
+- `r::Int` : Represents the ammount of zero dimensions
+- `symbols::Array{String}` : Array of primary symbols for the Algebra
 
 # Return
 Returns the created Algebra object.
 
 """
-function CreateAlgebra(p = 0, q = 0, VectorBasis = CanonVectorBasis(p, q), Basis = CanonBasis(VectorBasis))::AlgebraStruct
+function create_algebra(p, q = 0, r = 0, symbols = nothing)::Algebra
 
-    if(p < 0) 
-        throw(DomainError(p,"The parameter p must be greater than 0"))
+    if(p < 0)
+        throw(DomainError(p, "The parameter 'p' must be greater than or equal to 0"))
     elseif(q < 0)
-        throw(DomainError(q,"The parameter q must be greater than 0"))
+        throw(DomainError(q, "The parameter 'q' must be greater than or equal to 0"))
+    elseif(r < 0)
+        throw(DomainError(r, "The parameter 'r' must be greater than or equal to 0"))
     end
 
-    global CurrentAlgebra = AlgebraStruct(p, q, VectorBasis, Basis, IndexesBasis(p, q))
-    return CurrentAlgebra
+    if symbols === nothing
+        symbols = canon_symbols(p, q, r)
+        basis_bit_order = canon_basis_bit_order(symbols)
+        basis = sort(basis_bit_order, by = v -> length(v)) # May be commented by now
+    else
+        if(length(symbols) != p+q+r)
+            throw(DomainError(symbols, "The parameter 'symbols' has an incorrect length (should be equal to p+q+r)"))
+        end
+        basis_bit_order = canon_basis_bit_order(symbols)
+        basis = canon_basis(symbols) # May be commented by now
+    end
+
+    metric::Array{Int} = vcat(fill(0, r), fill(1, p), fill(-1, q))
+    max::Int = 2^(p+q+r)
+
+    global gb_current_algebra = Algebra(p, q, r, symbols, basis, basis_bit_order, metric, max)
+    return gb_current_algebra
 end
+
+# Global Variable for exporting the current Algebra
+create_algebra(0)

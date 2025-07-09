@@ -1,50 +1,38 @@
 include("OperatorOverloading.jl")
 
 # Create "id" value for any algebra
-const id = Multivectors([1], [1])
+const id = Multivector([1], [1])
 
 """
-    CreateSymbols(stringSymbols)
+    create_symbols(stringSymbols)
 
 Create and add to REPL all the (custom or basis) symbols for this Algebra.
 
 # Arguments
-- `stringSymbols::Array` : An array with all the custom or basis symbols.
+- `string_symbols::Array` : An array with all the custom or basis symbols.
 
 """
-function CreateSymbols(stringSymbols::Array)
+function create_symbols(string_symbols::Array)
 
-    symbolArray = []
+    symbol_array = []
 
-    for i in eachindex(stringSymbols)
+    for i in eachindex(string_symbols)
         if i == 1
             continue
         end
-        push!(symbolArray, Symbol(stringSymbols[i][1]))
+        push!(symbol_array, Symbol(string_symbols[i]))
     end
 
-    for k in eachindex(symbolArray)
-        symbol = symbolArray[k]
-        eval(:(const $symbol = Multivectors([$k+1], [1])))
+    for k in eachindex(symbol_array)
+        symbol = symbol_array[k]
+        eval(:(const $symbol = Multivector([$k+1], [1])))
         eval(:(export $symbol))
     end
 
 end
 
 """
-    CreateTables()
-
-Create and add to REPL all the custom operation tables for this Algebra.
-
-"""
-function CreateTables() 
-    CreateGPTable()
-    CreateIPTable()
-    CreateOPTable()
-end
-
-"""
-    Algebra(p, q, VectorBasis, Basis)::AlgebraStruct
+    Algebra(p, q, r, symbols)::Algebra
 
 Main function for creating your Algebra and adding its basis blades to REPL.
 Constructor Function of an algebraic object with parameters p, q, R^{p, q}, and its multivector space.
@@ -60,11 +48,10 @@ If not defined, the last two parameters are automatically calculated as canonica
 Returns the created Algebra object.
 
 """
-function Algebra(p = 0, q = 0, VectorBasis = CanonVectorBasis(p, q), Basis = CanonBasis(VectorBasis))::AlgebraStruct
+function Algebra(p = 0, q = 0, r = 0, symbols = nothing)::Algebra
 
-    Al = CreateAlgebra(p, q, VectorBasis, Basis)
-    CreateSymbols(Basis)
-    CreateTables()
+    Al = create_algebra(p, q, r, symbols)
+    create_symbols(Al.basis_bit_order)
 
     return Al
 

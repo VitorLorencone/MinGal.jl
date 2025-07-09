@@ -1,93 +1,65 @@
-include("OperationTable.jl")
+include("GeometricFunctions.jl")
 
 # Functions for operator overloading between types.
 
-function Base.:*(ei::Blade, ej::Blade)::Blade
-    return bladeGeometricProduct(ei,ej)
+# * Geometric Product or Product by Scalar
+function Base.:*(mi::GAType, mj::GAType)::GAType
+    return geometric_product(mi,mj)
 end
 
-function Base.:*(ei::Blade, k::Number)::Blade
-    return bladeScalarProduct(ei,k)
+function Base.:*(mv::GAType, k::Number)::GAType
+    return product_by_scalar(mv,k)
 end
-function Base.:*(k::Number, ei::Blade)::Blade
-    return bladeScalarProduct(ei,k)
-end
-
-function Base.:*(k::Number, ei::Multivector)::Multivector
-    return multivectorByScalar(ei, k)
-end
-function Base.:*(ei::Multivector, k::Number)::Multivector
-    return multivectorByScalar(ei, k)
-end
-function Base.:/(ei::Multivector, k::Number)::Multivector
-    return multivectorByScalar(ei, 1/k)
+function Base.:*(k::Number, mv::GAType)::GAType
+    return product_by_scalar(mv,k)
 end
 
-function Base.:\(ei::Blade, ej::Blade)::Blade
-    return bladeInnerProduct(ei,ej)
+# / Division by Scalar
+function Base.:/(mv::GAType, k::Number)::GAType
+    return product_by_scalar(mv, 1/k)
 end
 
-function Base.:^(ei::Blade, ej::Blade)::Blade
-    return bladeOuterProduct(ei,ej)
+# \ Inner Product
+function Base.:\(mi::GAType, mj::GAType)::GAType
+    return inner_product(mi,mj)
 end
 
-function Base.:(==)(ei::AbstractGeometricAlgebraType, ej::AbstractGeometricAlgebraType)::Bool
-    return ei.val == ej.val
-end
-function Base.:(!=)(ei::AbstractGeometricAlgebraType, ej::AbstractGeometricAlgebraType)::Bool
-    return !(ei == ej)
+# ^ Outer Product
+function Base.:^(mi::GAType, mj::GAType)::GAType
+    return outer_product(mi,mj)
 end
 
-function Base.:-(ei::AbstractGeometricAlgebraType)::AbstractGeometricAlgebraType
-    return -1 * ei
+# == or != comparison
+function Base.:(==)(mi::GAType, mj::GAType)::Bool
+    return mi.blade_array == mj.blade_array
+end
+function Base.:(!=)(mi::GAType, mj::GAType)::Bool
+    return mi.blade_array != mj.blade_array
 end
 
-function Base.:+(ei::AbstractGeometricAlgebraType, ej::AbstractGeometricAlgebraType)::AbstractGeometricAlgebraType
-    return multivectorSum(ei, ej)
-end
-function Base.:+(ei::Int, ej::AbstractGeometricAlgebraType)::AbstractGeometricAlgebraType
-    return multivectorSum(Multivectors([1],[ei]), ej)
-end
-function Base.:+(ei::AbstractGeometricAlgebraType, ej::Int)::AbstractGeometricAlgebraType
-    return multivectorSum(ei, Multivectors([1],[ej]))
+# - minus
+function Base.:-(mv::GAType)::GAType
+    return -1 * mv
 end
 
-function Base.:-(ei::AbstractGeometricAlgebraType, ej::AbstractGeometricAlgebraType)::AbstractGeometricAlgebraType
-    return multivectorSub(ei, ej)
+# + sum
+function Base.:+(mi::GAType, mj::GAType)::GAType
+    return multivector_sum(mi, mj)
 end
-function Base.:-(ei::Int, ej::AbstractGeometricAlgebraType)::AbstractGeometricAlgebraType
-    return multivectorSub(Multivectors([1],[ei]), ej)
+function Base.:+(k::Int, mv::GAType)::GAType
+    return multivector_sum(Blade(0, k), mv)
 end
-function Base.:-(ei::AbstractGeometricAlgebraType, ej::Int)::AbstractGeometricAlgebraType
-    return multivectorSub(ei, Multivectors([1],[ej]))
-end
-
-function Base.:*(ei::Multivector, ej::Multivector)::AbstractGeometricAlgebraType
-    return multivectorGP(ei, ej)
-end
-function Base.:*(ei::Blade, ej::Multivector)::AbstractGeometricAlgebraType
-    return multivectorGP(ei, ej)
-end
-function Base.:*(ei::Multivector, ej::Blade)::AbstractGeometricAlgebraType
-    return multivectorGP(ei, ej)
+function Base.:+(mv::GAType, k::Int)::GAType
+    return multivector_sum(Blade(0, k), mv)
 end
 
-function Base.:\(ei::Multivector, ej::Multivector)::AbstractGeometricAlgebraType
-    return multivectorIP(ei, ej)
+# - sub
+function Base.:-(mi::GAType, mj::GAType)::GAType
+    return multivector_sub(mi, mj)
 end
-function Base.:\(ei::Blade, ej::Multivector)::AbstractGeometricAlgebraType
-    return multivectorIP(ei, ej)
+function Base.:-(k::Int, mv::GAType)::GAType
+    return multivector_sub(Blade(0, k), mv)
 end
-function Base.:\(ei::Multivector, ej::Blade)::AbstractGeometricAlgebraType
-    return multivectorIP(ei, ej)
-end
-
-function Base.:^(ei::Multivector, ej::Multivector)::AbstractGeometricAlgebraType
-    return multivectorOP(ei, ej)
-end
-function Base.:^(ei::Blade, ej::Multivector)::AbstractGeometricAlgebraType
-    return multivectorOP(ei, ej)
-end
-function Base.:^(ei::Multivector, ej::Blade)::AbstractGeometricAlgebraType
-    return multivectorOP(ei, ej)
+function Base.:-(mv::GAType, k::Int)::GAType
+    return multivector_sub(Blade(0, k), mv)
 end

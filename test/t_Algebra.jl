@@ -1,4 +1,4 @@
-include("../src/Mingal.jl")
+include("../src/MinGal.jl")
 using .Mingal
 using Test
 
