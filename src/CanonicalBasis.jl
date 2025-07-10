@@ -16,7 +16,7 @@ Return an array of strings with all the necessary elements for this space.
 
 """
 function canon_symbols(p::Int, q::Int = 0, r::Int = 0)::Array{String}
-
+    
     if(p < 0)
         throw(DomainError(p,"The parameter 'p' must be greater than or equal to 0"))
     elseif(q < 0)
@@ -25,9 +25,15 @@ function canon_symbols(p::Int, q::Int = 0, r::Int = 0)::Array{String}
         throw(DomainError(r,"The parameter 'r' must be greater than or equal to 0"))
     end
 
+    if(r == 0)
+        starting_index = 1
+    else
+        starting_index = 0
+    end
+
     basis::Array{String} = []
 
-    for i in 1:(p+q+r)
+    for i in starting_index:(p+q+r-1+starting_index)
         str_name::String = "e" * string(i)
         push!(basis, str_name)
     end

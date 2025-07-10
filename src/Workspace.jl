@@ -1,7 +1,7 @@
 include("OperatorOverloading.jl")
 
 # Create "id" value for any algebra
-const id = Multivector([0], [1])
+id = Multivector([0], [1])
 
 """
     create_symbols(stringSymbols)
@@ -28,7 +28,21 @@ function create_symbols(string_symbols::Array)
         eval(:($symbol = Multivector([$k], [1])))
         eval(:(export $symbol))
     end
+end
 
+function create_symbols_min(string_symbols::Array)
+
+    symbol_array = []
+
+    for i in eachindex(string_symbols)
+        push!(symbol_array, Symbol(string_symbols[i]))
+    end
+
+    for k in eachindex(symbol_array)
+        symbol = symbol_array[k]
+        eval(:($symbol = Multivector([2^($k-1)], [1])))
+        eval(:(export $symbol))
+    end
 end
 
 """
@@ -50,9 +64,15 @@ Returns the created Algebra object.
 """
 function Algebra(p = 0, q = 0, r = 0, symbols = nothing)::Algebra
 
-    Al = create_algebra(p, q, r, symbols)
-    create_symbols(Al.basis_bit_order)
+    if p+q+r >= 15
+        Al = create_algebra_min(p, q, r)
+        create_symbols_min(Al.symbols)
+    else
+        Al = create_algebra(p, q, r, symbols)
+        create_symbols(Al.basis_bit_order)
+    end
 
+    id = Multivector([0], [1])
     return Al
 
 end

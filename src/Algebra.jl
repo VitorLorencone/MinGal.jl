@@ -1,7 +1,9 @@
 include("CanonicalBasis.jl")
 
+abstract type Algebra end
+
 """
-    Algebra(p, q, r, symbols, basis, basis_bit_order, metric, max)
+    AlgebraFull(p, q, r, symbols, basis, basis_bit_order, metric, max)
 
 A structure to define an algebra to be worked with its respective dimensions and canonical vectors.
 
@@ -16,7 +18,7 @@ A structure to define an algebra to be worked with its respective dimensions and
 - `max::Int` : max number of Algebra, the same as 2^(p+q+r)
 
 """
-struct Algebra
+struct AlgebraFull <: Algebra
     p::Int
     q::Int
     r::Int
@@ -28,6 +30,28 @@ struct Algebra
 end
 
 """
+    AlgebraMin(p, q, r, symbols, metric, max)
+
+A structure to define an algebra to be worked with its respective dimensions and canonical vectors.
+
+# Fields
+- `p::Int` : Represents the ammount of positive dimensions
+- `q::Int` : Represents the ammount of negative dimensions
+- `z::Int` : Represents the ammount of zero dimensions
+- `max::Int` : max number of Algebra, the same as 2^(p+q+r)
+
+"""
+struct AlgebraMin <: Algebra
+    p::Int
+    q::Int
+    r::Int
+    symbols::Array{String}
+    metric::Array{Int8}
+    max::Int
+end
+
+
+"""
     describe(al::Algebra)
 
 Describe function for showing the Algebra function.
@@ -36,7 +60,7 @@ Describe function for showing the Algebra function.
 - `al::Algebra` : The algebra for printing
 
 """
-function describe(al::Algebra)
+function describe(al::AlgebraFull)
     println("Algebra:")
     println("- p: $(al.p)")
     println("- q: $(al.q)")
@@ -44,6 +68,16 @@ function describe(al::Algebra)
     println("- symbols: $(al.symbols)")
     println("- basis: $(al.basis)")
     println("- basis_bit_order: $(al.basis_bit_order)")
+    println("- metric: $(al.metric)")
+    println("- max: $(al.max)")
+end
+
+function describe(al::AlgebraMin)
+    println("Algebra:")
+    println("- p: $(al.p)")
+    println("- q: $(al.q)")
+    println("- r: $(al.r)")
+    println("- symbols: $(al.symbols)")
     println("- metric: $(al.metric)")
     println("- max: $(al.max)")
 end
@@ -89,7 +123,24 @@ function create_algebra(p, q = 0, r = 0, symbols = nothing)::Algebra
     metric::Array{Int} = vcat(fill(0, r), fill(1, p), fill(-1, q))
     max::Int = 2^(p+q+r)
 
-    global gb_current_algebra = Algebra(p, q, r, symbols, basis, basis_bit_order, metric, max)
+    global gb_current_algebra = AlgebraFull(p, q, r, symbols, basis, basis_bit_order, metric, max)
+    return gb_current_algebra
+end
+
+function create_algebra_min(p, q = 0, r = 0, symbols = canon_symbols(p, q, r))::Algebra
+
+    if(p < 0)
+        throw(DomainError(p, "The parameter 'p' must be greater than or equal to 0"))
+    elseif(q < 0)
+        throw(DomainError(q, "The parameter 'q' must be greater than or equal to 0"))
+    elseif(r < 0)
+        throw(DomainError(r, "The parameter 'r' must be greater than or equal to 0"))
+    end
+
+    metric::Array{Int} = vcat(fill(0, r), fill(1, p), fill(-1, q))
+    max::Int = 2^(p+q+r)
+
+    global gb_current_algebra = AlgebraMin(p, q, r, symbols, metric, max)
     return gb_current_algebra
 end
 

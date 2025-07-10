@@ -184,6 +184,7 @@ function geometric_product(ei:: GAType, ej::GAType)::GAType
             result += geometric_product(Blade(i-1, si), Blade(j-1, sj))
         end
     end
+    dropzeros!(result.blade_array)
     return result
 end
 
@@ -207,6 +208,7 @@ function outer_product(ei:: GAType, ej::GAType)::GAType
             result += outer_product(Blade(i-1, si), Blade(j-1, sj))
         end
     end
+    dropzeros!(result.blade_array)
     return result
 end
 
@@ -230,5 +232,6 @@ function inner_product(ei:: GAType, ej::GAType)::GAType
             result += inner_product(Blade(i-1, si), Blade(j-1, sj))
         end
     end
+    dropzeros!(result.blade_array)
     return result
 end

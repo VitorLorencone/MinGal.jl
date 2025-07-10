@@ -140,6 +140,21 @@ function Multivector(blades::Array{Blade})::Multivector
     return Multivector(values)
 end
 
+function str_bl(n::Int, al::AlgebraFull)::String
+    return gb_current_algebra.basis_bit_order[n]
+end
+
+function str_bl(n::Int, al::AlgebraMin)::String
+    n -= 1
+    ans = ""
+    for i in 1:sizeof(n) * 8
+        if (n >> (i - 1)) & 1 == 1
+            ans *= gb_current_algebra.symbols[i]
+        end
+    end
+    return ans
+end
+
 # Pretty print a GAType
 function Base.show(io::IO, mv::GAType)
     bitmaps = mv.blade_array.nzind
@@ -148,9 +163,9 @@ function Base.show(io::IO, mv::GAType)
 
     for i in eachindex(bitmaps)
         if bitmaps[i] > 1 && scalars[i] > 0
-            ans = ans * "+ " * string(round(scalars[i], digits=3)) * "*" * gb_current_algebra.basis_bit_order[bitmaps[i]] * " "
+            ans = ans * "+ " * string(round(scalars[i], digits=3)) * "*" * str_bl(bitmaps[i], gb_current_algebra) * " "
         elseif bitmaps[i] > 1 && scalars[i] < 0
-            ans = ans * "- " * string(round(abs(scalars[i]), digits=3)) * "*" * gb_current_algebra.basis_bit_order[bitmaps[i]] * " "
+            ans = ans * "- " * string(round(abs(scalars[i]), digits=3)) * "*" * str_bl(bitmaps[i], gb_current_algebra) * " "
         elseif bitmaps[i] == 1 && scalars[i] > 0
             ans = ans * string(scalars[i]) * " "
         elseif bitmaps[i] == 1 && scalars[i] < 0
@@ -159,7 +174,6 @@ function Base.show(io::IO, mv::GAType)
             ans = "0.0 "
         end
     end
-
     if length(ans) > 0
         if ans[1] == '+'
             ans = ans[3:end]
@@ -167,8 +181,6 @@ function Base.show(io::IO, mv::GAType)
     else
         ans = "0.0 "
     end
-
     ans = ans[1:end-1]
-
     print(ans)
 end
