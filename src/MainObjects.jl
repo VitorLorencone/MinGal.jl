@@ -49,6 +49,11 @@ Creates a Blade based on bitmap and Scalars or Converts a multivector into a bla
 Returns a Blade.
 
 """
+
+function Base.length(mv::GAType)::Int
+    return length(mv.blade_array.nzind)
+end
+
 function Blade(bitmap::Int, scalar)
     values = sparsevec([bitmap+1], [scalar], gb_current_algebra.max)
     return Blade(values)
@@ -58,7 +63,7 @@ function Blade(mv::Multivector)::Blade
     if length(mv) != 1
         throw(DomainError(mv, "You cannot convert this multivector to a blade."))
     end
-    return Blade(mv.nzind[1]-1, mv.nzval[1])
+    return Blade(mv.blade_array.nzind[1]-1, mv.blade_array.nzval[1])
 end
 
 """
@@ -75,7 +80,7 @@ The bitmap
 """
 
 function bitmap(bl::Blade)::Int
-    return bl.nzind[1]-1
+    return bl.blade_array.nzind[1]-1
 end
 
 """
@@ -92,7 +97,7 @@ The scalar
 """
 
 function scalar(bl::Blade)::Number
-    return bl.nzval[1]
+    return bl.blade_array.nzval[1]
 end
 
 """
@@ -115,7 +120,7 @@ Returns a Multivector.
 
 """
 function Multivector(base_vectors::Array, scalars::Array)::Multivector
-    values = sparsevec(base_vectors, scalars, gb_current_algebra.max)
+    values = sparsevec(base_vectors .+ 1, scalars, gb_current_algebra.max)
     return Multivector(values)
 end
 
@@ -128,7 +133,7 @@ function Multivector(blades::Array{Blade})::Multivector
     bitmaps = []
     scalars = []
     for bl in blades
-        push!(bitmaps, bitmap(bl)+1)
+        push!(bitmaps, bitmap(bl))
         push!(scalars, scalar(bl))
     end
     values = sparsevec(bitmaps, scalars, gb_current_algebra.max)

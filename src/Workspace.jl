@@ -1,7 +1,7 @@
 include("OperatorOverloading.jl")
 
 # Create "id" value for any algebra
-const id = Multivector([1], [1])
+const id = Multivector([0], [1])
 
 """
     create_symbols(stringSymbols)
@@ -25,7 +25,7 @@ function create_symbols(string_symbols::Array)
 
     for k in eachindex(symbol_array)
         symbol = symbol_array[k]
-        eval(:(const $symbol = Multivector([$k+1], [1])))
+        eval(:($symbol = Multivector([$k], [1])))
         eval(:(export $symbol))
     end
 
@@ -41,8 +41,8 @@ If not defined, the last two parameters are automatically calculated as canonica
 # Arguments
 - `p::Int` : The first parameter of the definition
 - `q::Int` : The second parameter of the definition
-- `VectorBasis::Array{String}` : An Array with vectors to work with
-- `Basis::Array{Tuple{String,Int}}` : An Array with the multivector base and it's indexes
+- `r::Int` : The third parameter of the definition
+- `symbols::Array{String}` : An Array with string vectors to work with
 
 # Return
 Returns the created Algebra object.

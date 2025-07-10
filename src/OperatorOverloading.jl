@@ -46,10 +46,10 @@ end
 function Base.:+(mi::GAType, mj::GAType)::GAType
     return multivector_sum(mi, mj)
 end
-function Base.:+(k::Int, mv::GAType)::GAType
+function Base.:+(k::Number, mv::GAType)::GAType
     return multivector_sum(Blade(0, k), mv)
 end
-function Base.:+(mv::GAType, k::Int)::GAType
+function Base.:+(mv::GAType, k::Number)::GAType
     return multivector_sum(Blade(0, k), mv)
 end
 
@@ -57,9 +57,9 @@ end
 function Base.:-(mi::GAType, mj::GAType)::GAType
     return multivector_sub(mi, mj)
 end
-function Base.:-(k::Int, mv::GAType)::GAType
+function Base.:-(k::Number, mv::GAType)::GAType
     return multivector_sub(Blade(0, k), mv)
 end
-function Base.:-(mv::GAType, k::Int)::GAType
-    return multivector_sub(Blade(0, k), mv)
+function Base.:-(mv::GAType, k::Number)::GAType
+    return multivector_sub(mv, Blade(0, k))
 end

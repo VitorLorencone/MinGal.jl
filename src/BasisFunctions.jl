@@ -20,8 +20,8 @@ end
 
 function grade(mv::Multivector)::Int
     grade::Int = 0
-    for bitmap in mv.nzind
-        grade = max(grade, bitmap-1)
+    for bitmap in mv.blade_array.nzind
+        grade = max(grade, count_ones(bitmap-1))
     end
     return grade
 end
@@ -42,21 +42,21 @@ multivector form, it requires that it has only one blade.
 The result Blade. It might be the 1D blade "1"
 
 """
-function grade_projection(bl::Blade, k::Int)::Blade
+function grade_projection(bl::Blade, k::Int)::Multivector
     if grade(bl) == k
         return Multivector(bl)
     else
-        return Multivector(Blade(0,1))
+        return Multivector(Blade(0,0))
     end
 end
 
-function grade_projection(mv::Multivector, k::Int)::Blade
+function grade_projection(mv::Multivector, k::Int)::Multivector
     bl = Blade(mv)
 
     if grade(bl) == k
         return Multivector(bl)
     else
-        return Multivector(Blade(0,1))
+        return Multivector(Blade(0,0))
     end
 end
 
@@ -116,15 +116,125 @@ The scalar value.
 
 """
 function get_scalar(mv::Multivector, k::Int)::Number
-    if k in mv.blade_array.nzind
-        return mv.blade_array[k]
+    if (k+1) in mv.blade_array.nzind
+        return mv.blade_array[k+1]
     end
     return 0
 end
 
-function get_scalar(mv::Multivector, ei::Blade)::Number
-    if (bitmap(ei)+1) in mv.blade_array.nzind
-        return mv.blade_array[bitmap(ei)+1]
+function get_scalar(mv::Multivector, ei::Multivector)::Number
+    bl = Blade(ei)
+    if (bitmap(bl)+1) in mv.blade_array.nzind
+        return mv.blade_array[bitmap(bl)+1]
     end
     return 0
+end
+
+"""
+    set_scalar(mv, val, k)::Number ||
+    set_scalar(mv, val, ei)::Number
+
+Function that changes the scalar value in index k from multivector mv.
+The index k follows the bit order basis.The ei value represents the 
+blade that you want to change the scalar from.
+
+# Arguments
+- `mv::Multivector`
+- `val::Number` : New Value
+- `k::Int` : Index
+||
+- `ei::Blade` : Index
+
+# Return
+The scalar value.
+
+"""
+function set_scalar(mv::GAType, val::Number, k::Int)
+    mv.blade_array[k+1] = val
+    return val
+end
+
+function set_scalar(mv::GAType, val::Number, ei::Multivector)
+    bl = Blade(ei)
+    mv.blade_array[bitmap(bl)+1] = val
+    return val
+end
+
+"""
+    has_key(mv, k)::Bool ||
+    has_key(mv, ei)::Bool
+
+Function that checks if the multivector has a blade.
+
+# Arguments
+- `mv::Multivector`
+- `k::Int` : Index
+||
+- `ei::Blade` : Index
+
+# Return
+True, if yes, False, if not.
+
+"""
+function has_key(mv::GAType, k::Int)::Bool
+    if(get_scalar(mv, k) != 0)
+        return true
+    end
+    return false
+end
+
+function has_key(mv::GAType, ei::Multivector)::Bool
+    if(get_scalar(mv, ei) != 0)
+        return true
+    end
+    return false
+end
+
+# Base functions Substitution
+
+function Base.getindex(mv::GAType, k::Int)
+    return get_scalar(mv, k)
+end
+
+function Base.getindex(mv::GAType, ei::Multivector)
+    return get_scalar(mv, ei)
+end
+
+function Base.setindex!(mv::GAType, val::Number, k::Int)
+    return set_scalar(mv, val, k)
+end
+
+function Base.setindex!(mv::GAType, val::Number, ei::Multivector)
+    return set_scalar(mv, val, ei)
+end
+
+function Base.iterate(mv::GAType, state = 1)
+    inds = mv.blade_array.nzind
+    vals = mv.blade_array.nzval
+
+    if state > length(inds)
+        return nothing
+    else
+        return ((inds[state]-1, vals[state]), state + 1)
+    end
+end
+
+function Base.size(mv::GAType)
+    return mv.blade_array.n
+end
+
+function Base.keys(mv::GAType)
+    return mv.blade_array.nzind .- 1
+end
+
+function Base.values(mv::GAType)
+    return mv.blade_array.nzval
+end
+
+function Base.haskey(mv::GAType, k::Int)
+    return has_key(mv, k)
+end
+
+function Base.haskey(mv::GAType, ei::Multivector)
+    return has_key(mv, ei)
 end
