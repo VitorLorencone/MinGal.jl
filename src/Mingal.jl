@@ -4,6 +4,7 @@
 # -> More GA Functions
 # -> Fix creating huge dimensions
 # -> Dinamically create symbols
+# -> Fix Docs and Tests
 
 module MinGal
 
