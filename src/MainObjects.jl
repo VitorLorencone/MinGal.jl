@@ -11,7 +11,6 @@ Struct that creates the Blade object. The bitmap that specifies what basis vecto
 and The scalar of the basis blade.
 
 # Arguments
-- `blade_array::SparseArrays.SparseVector{Number, Int}` : An sparse vector with the internal values of 
 basis blades and their scalars.
 
 

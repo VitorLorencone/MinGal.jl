@@ -7,6 +7,8 @@
 # -> Fix Docs and Tests
 # -> Per-grade compression and new data structure
 # -> Linear Systems
+# -> Per-grade compression and new data structure
+# -> Linear Systems
 
 module MinGal
 

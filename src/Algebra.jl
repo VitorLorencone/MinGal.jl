@@ -10,7 +10,7 @@ A structure to define an algebra to be worked with its respective dimensions and
 # Fields
 - `p::Int` : Represents the ammount of positive dimensions
 - `q::Int` : Represents the ammount of negative dimensions
-- `z::Int` : Represents the ammount of zero dimensions
+- `r::Int` : Represents the ammount of zero dimensions
 - `symbols::Array{String}` : Array of primary symbols for the Algebra
 - `basis::Array{String}` : Array of all symbols for the Algebra, normal order
 - `basis_bit_order::Array{String}` : Array of symbols for the Algebra, bit order
