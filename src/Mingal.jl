@@ -5,6 +5,8 @@
 # -> Fix creating huge dimensions
 # -> Dinamically create symbols
 # -> Fix Docs and Tests
+# -> Per-grade compression and new data structure
+# -> Linear Systems
 
 module MinGal
 

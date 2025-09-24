@@ -11,7 +11,7 @@ Struct that creates the Blade object. The bitmap that specifies what basis vecto
 and The scalar of the basis blade.
 
 # Arguments
-- `blade_array::SparseArrays.SparseVector{AbstractFloat, Int}` : An sparse vector with the internal values of 
+- `blade_array::SparseArrays.SparseVector{Number, Int}` : An sparse vector with the internal values of 
 basis blades and their scalars.
 
 
@@ -34,6 +34,10 @@ struct Multivector <: GAType
     blade_array::SparseArrays.SparseVector{Number, Int}
 end
 
+function Base.length(mv::GAType)::Int
+    return length(mv.blade_array.nzind)
+end
+
 """
     Blade(bitmap, scalar)::Blade ||
     Blade(mv::Multivector)::Blade
@@ -49,11 +53,6 @@ Creates a Blade based on bitmap and Scalars or Converts a multivector into a bla
 Returns a Blade.
 
 """
-
-function Base.length(mv::GAType)::Int
-    return length(mv.blade_array.nzind)
-end
-
 function Blade(bitmap::Int, scalar)
     values = sparsevec([bitmap+1], [scalar], gb_current_algebra.max)
     return Blade(values)

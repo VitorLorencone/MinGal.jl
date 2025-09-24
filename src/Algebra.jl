@@ -37,7 +37,7 @@ A structure to define an algebra to be worked with its respective dimensions and
 # Fields
 - `p::Int` : Represents the ammount of positive dimensions
 - `q::Int` : Represents the ammount of negative dimensions
-- `z::Int` : Represents the ammount of zero dimensions
+- `r::Int` : Represents the ammount of zero dimensions
 - `max::Int` : max number of Algebra, the same as 2^(p+q+r)
 
 """
@@ -120,7 +120,7 @@ function create_algebra(p, q = 0, r = 0, symbols = nothing)::Algebra
         basis = canon_basis(symbols) # May be commented by now
     end
 
-    metric::Array{Int} = vcat(fill(0, r), fill(1, p), fill(-1, q))
+    metric::Array{Int8} = vcat(fill(0, r), fill(1, p), fill(-1, q))
     max::Int = 2^(p+q+r)
 
     global gb_current_algebra = AlgebraFull(p, q, r, symbols, basis, basis_bit_order, metric, max)
@@ -137,7 +137,7 @@ function create_algebra_min(p, q = 0, r = 0, symbols = canon_symbols(p, q, r))::
         throw(DomainError(r, "The parameter 'r' must be greater than or equal to 0"))
     end
 
-    metric::Array{Int} = vcat(fill(0, r), fill(1, p), fill(-1, q))
+    metric::Array{Int8} = vcat(fill(0, r), fill(1, p), fill(-1, q))
     max::Int = 2^(p+q+r)
 
     global gb_current_algebra = AlgebraMin(p, q, r, symbols, metric, max)
