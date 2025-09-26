@@ -12,5 +12,7 @@ export Algebra, grade, grade_projection, reverse
 export geometric_product, inner_product, outer_product
 export bitmap, scalar, multivector_sum, multivector_sub
 export Multivector, Blade, product_by_scalar, describe
+export grade_selection, left_contraction, right_contraction
+export GAType, GAVector, GAArray
 
 end

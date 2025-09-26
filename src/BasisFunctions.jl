@@ -215,7 +215,7 @@ function Base.iterate(mv::GAType, state = 1)
     if state > length(inds)
         return nothing
     else
-        return ((inds[state]-1, vals[state]), state + 1)
+        return (Blade(inds[state]-1, vals[state]), state + 1)
     end
 end
 

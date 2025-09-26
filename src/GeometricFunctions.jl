@@ -258,12 +258,21 @@ function reverse(ei::GAType)::GAType
     return result
 end
 
+"""
+    left_contraction(ei::GAType, ej::GAType)::GAType
+
+Function that computes the left contraction of two multivectors and return its result.
+
+# Arguments
+- `ei::Multivector` : A GAType.
+- `ej::Multivector` : A GAType.
+
+# Return
+The result GAType.
+
+"""
 function left_contraction(ei::Blade, ej::Blade)::Multivector
     grade_projection(ei*ej, grade(ej) - grade(ei))
-end
-
-function right_contraction(ei::Blade, ej::Blade)::Multivector
-    grade_projection(ei*ej, grade(ei) - grade(ej))
 end
 
 function left_contraction(ei::GAType, ej::GAType)::GAType
@@ -277,6 +286,23 @@ function left_contraction(ei::GAType, ej::GAType)::GAType
     return result
 end
 
+"""
+    right_contraction(ei::GAType, ej::GAType)::GAType
+
+Function that computes the right contraction of two multivectors and return its result.
+
+# Arguments
+- `ei::Multivector` : A GAType.
+- `ej::Multivector` : A GAType.
+
+# Return
+The result GAType.
+
+"""
+function right_contraction(ei::Blade, ej::Blade)::Multivector
+    grade_projection(ei*ej, grade(ei) - grade(ej))
+end
+
 function right_contraction(ei::GAType, ej::GAType)::GAType
     result = Multivector([0],[0])
     for (i, si) in zip(ei.blade_array.nzind, ei.blade_array.nzval)
@@ -285,5 +311,28 @@ function right_contraction(ei::GAType, ej::GAType)::GAType
         end
     end
     dropzeros!(result.blade_array)
+    return result
+end
+
+"""
+    grade_selection(ei::GAType, k::Number)::GAType
+
+Function that retrieves the k grade part of a GAType.
+
+# Arguments
+- `ei::Multivector` : A GAType.
+- `k::Number` : The selected grade.
+
+# Return
+The result GAType.
+
+"""
+function grade_selection(ei::GAType, k::Number)::GAType
+    result = Multivector([0],[0])
+    for bl in ei
+        if grade(bl) == k
+            result += bl
+        end
+    end
     return result
 end

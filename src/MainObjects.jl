@@ -3,6 +3,8 @@ import SparseArrays
 using .SparseArrays
 
 abstract type GAType end
+const GAVector = AbstractVector{<:GAType}
+const GAArray{T<:GAType,N} = AbstractArray{T,N}
 
 """
     Blade(blade_array)
@@ -83,6 +85,10 @@ function Blade(k::Number)::Blade
     return Blade(values)
 end
 
+function Blade(bl::Blade)::Blade
+    return bl
+end
+
 """
     bitmap(bl::Blade)::Integer
 
@@ -130,7 +136,7 @@ Constructor function for creating multivectors.
 ||
 - `bl::Blade` : A Blade, to convert to Multivector.
 ||
-- `blades::Vector{Blade}` : An array of Blades, to convert to Multivector.
+- `blades::GAVector` : An array of Blades, to convert to Multivector.
 
 # Return
 Returns a Multivector.
@@ -155,11 +161,12 @@ function Multivector(bl::Blade)::Multivector
     return Multivector(values)
 end
 
-function Multivector(blades::Vector{Blade})::Multivector
+function Multivector(blades::GAVector)::Multivector
     bitmaps = []
     scalars = []
     for bl in blades
-        push!(bitmaps, bitmap(bl))
+        bl = Blade(bl)
+        push!(bitmaps, bitmap(bl)+1)
         push!(scalars, scalar(bl))
     end
 
@@ -215,4 +222,8 @@ function Base.show(io::IO, mv::GAType)
     end
     ans = ans[1:end-1]
     print(ans)
+end
+
+function Base.show(io::IO, ::MIME"text/plain", xs::GAArray)
+    print(xs)
 end
