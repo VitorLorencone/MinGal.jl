@@ -1,10 +1,7 @@
 # TODO
 # -> Implement the multiplicative approach
-# -> Redo Operation Table
 # -> More GA Functions
-# -> Fix creating huge dimensions
 # -> Fix Docs and Tests
-# -> Per-grade compression and new data structure
 # -> Linear Systems Examples
 
 module MinGal
