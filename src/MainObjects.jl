@@ -39,14 +39,18 @@ end
 
 """
     Blade(bitmap, scalar)::Blade ||
-    Blade(mv::Multivector)::Blade
+    Blade(mv::Multivector)::Blade ||
+    Blade(k::Number)::Blade
 
 Creates a Blade based on bitmap and Scalars or Converts a multivector into a blade. It may throw an error
 
 # Arguments
 - `bitmap::Integer` : The bitmap that specifies what basis vectors are present in this blade 
 - `scalar::Number` : The scalar of the basis blade.
+||
 - `mv::Multivector`
+||
+- `k::Number`
 
 # Return
 Returns a Blade.
@@ -66,6 +70,17 @@ function Blade(mv::Multivector)::Blade
         throw(DomainError(mv, "You cannot convert this multivector to a blade."))
     end
     return Blade(mv.blade_array.nzind[1]-1, mv.blade_array.nzval[1])
+end
+
+function Blade(k::Number)::Blade
+    bitmap = 1
+    
+    if typeof(gb_current_algebra.max) == BigInt
+        bitmap = typeof(gb_current_algebra.max)(bitmap)
+    end
+    
+    values = sparsevec([bitmap], [k], gb_current_algebra.max)
+    return Blade(values)
 end
 
 """

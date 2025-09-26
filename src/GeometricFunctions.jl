@@ -257,3 +257,33 @@ function reverse(ei::GAType)::GAType
     end
     return result
 end
+
+function left_contraction(ei::Blade, ej::Blade)::Multivector
+    grade_projection(ei*ej, grade(ej) - grade(ei))
+end
+
+function right_contraction(ei::Blade, ej::Blade)::Multivector
+    grade_projection(ei*ej, grade(ei) - grade(ej))
+end
+
+function left_contraction(ei::GAType, ej::GAType)::GAType
+    result = Multivector([0],[0])
+    for (i, si) in zip(ei.blade_array.nzind, ei.blade_array.nzval)
+        for (j, sj) in zip(ej.blade_array.nzind, ej.blade_array.nzval)
+            result += left_contraction(Blade(i-1, si), Blade(j-1, sj))
+        end
+    end
+    dropzeros!(result.blade_array)
+    return result
+end
+
+function right_contraction(ei::GAType, ej::GAType)::GAType
+    result = Multivector([0],[0])
+    for (i, si) in zip(ei.blade_array.nzind, ei.blade_array.nzval)
+        for (j, sj) in zip(ej.blade_array.nzind, ej.blade_array.nzval)
+            result += right_contraction(Blade(i-1, si), Blade(j-1, sj))
+        end
+    end
+    dropzeros!(result.blade_array)
+    return result
+end

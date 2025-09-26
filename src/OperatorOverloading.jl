@@ -40,18 +40,43 @@ end
 function Base.:\(mi::GAType, mj::GAType)::GAType
     return inner_product(mi,mj)
 end
+function Base.:\(mi::GAType, mj::Number)::GAType
+    return inner_product(mi, Blade(mj))
+end
+function Base.:\(mi::Number, mj::GAType)::GAType
+    return inner_product(Blade(mi), mj)
+end
 
 # ^ Outer Product
 function Base.:^(mi::GAType, mj::GAType)::GAType
     return outer_product(mi,mj)
+end
+function Base.:^(mi::GAType, mj::Number)::GAType
+    return outer_product(mi, Blade(mj))
+end
+function Base.:^(mi::Number, mj::GAType)::GAType
+    return outer_product(Blade(mi), mj)
 end
 
 # == or != comparison
 function Base.:(==)(mi::GAType, mj::GAType)::Bool
     return mi.blade_array == mj.blade_array
 end
+function Base.:(==)(mi::GAType, mj::Number)::Bool
+    return mi.blade_array == Blade(mj).blade_array
+end
+function Base.:(==)(mi::Number, mj::GAType)::Bool
+    return Blade(mi).blade_array == mj.blade_array
+end
+
 function Base.:(!=)(mi::GAType, mj::GAType)::Bool
     return mi.blade_array != mj.blade_array
+end
+function Base.:(!=)(mi::GAType, mj::Number)::Bool
+    return mi.blade_array != Blade(mj).blade_array
+end
+function Base.:(!=)(mi::Number, mj::GAType)::Bool
+    return Blade(mi).blade_array != mj.blade_array
 end
 
 # - minus
@@ -84,4 +109,26 @@ end
 # ~ reverse
 function Base.:~(mi::GAType)::GAType
     return reverse(mi)
+end
+
+# << left contraction
+function Base.:(<<)(mi::GAType, mj::GAType)::GAType
+    left_contraction(mi, mj)
+end
+function Base.:(<<)(mi::Number, mj::GAType)::GAType
+    left_contraction(Blade(mi), mj)
+end
+function Base.:(<<)(mi::GAType, mj::Number)::GAType
+    left_contraction(mi, Blade(mj))
+end
+
+# >> right contraction
+function Base.:(>>)(mi::GAType, mj::GAType)::GAType
+    right_contraction(mi, mj)
+end
+function Base.:(>>)(mi::Number, mj::GAType)::GAType
+    right_contraction(Blade(mi), mj)
+end
+function Base.:(>>)(mi::GAType, mj::Number)::GAType
+    right_contraction(mi, Blade(mj))
 end
