@@ -2,7 +2,7 @@ import Combinatorics
 using .Combinatorics
 
 """
-    canon_symbols(p, [q], [r])::Array{String}
+    canon_symbols(p, [q], [r])::Vector{String}
 
 Function that writes the canonical vector space symbols, given the parameters p, q and r for definition
 
@@ -15,7 +15,7 @@ Function that writes the canonical vector space symbols, given the parameters p,
 Return an array of strings with all the necessary elements for this space.
 
 """
-function canon_symbols(p::Int, q::Int = 0, r::Int = 0)::Array{String}
+function canon_symbols(p::Int, q::Int = 0, r::Int = 0)::Vector{String}
     
     if(p < 0)
         throw(DomainError(p,"The parameter 'p' must be greater than or equal to 0"))
@@ -31,7 +31,7 @@ function canon_symbols(p::Int, q::Int = 0, r::Int = 0)::Array{String}
         starting_index = 0
     end
 
-    basis::Array{String} = []
+    basis::Vector{String} = []
 
     for i in starting_index:(p+q+r-1+starting_index)
         str_name::String = "e" * string(i)
@@ -42,18 +42,18 @@ function canon_symbols(p::Int, q::Int = 0, r::Int = 0)::Array{String}
 end
 
 """
-    canon_basis(symbols)::Array{String}
+    canon_basis(symbols)::Vector{String}
 
 Function that lists all the combinations of canonical vectors in a given Algebra.
 
 # Arguments
-- `symbols::Array{String}` : An array of strings to be combined.
+- `symbols::Vector{String}` : An array of strings to be combined.
 
 # Return
 Returns a list with all combinations of the elements, forming the basis of the multivector space.
 
 """
-function canon_basis(symbols::Array{String})::Array{String}
+function canon_basis(symbols::Vector{String})::Vector{String}
     
     basis::Array{String} = ["1"]
     for k in 1:length(symbols)
@@ -66,18 +66,18 @@ function canon_basis(symbols::Array{String})::Array{String}
 end
 
 """
-    canon_basis_bit_order(symbols)::Array{String}
+    canon_basis_bit_order(symbols)::Vector{String}
 
 Function that lists all the combinations of canonical vectors in a given Algebra in bit order.
 
 # Arguments
-- `symbols::Array{String}` : An array of strings to be combined.
+- `symbols::Vector{String}` : An array of strings to be combined.
 
 # Return
 Returns a list with all combinations of the elements, forming the basis of the multivector space, in bit order.
 
 """
-function canon_basis_bit_order(symbols)::Array{String}
+function canon_basis_bit_order(symbols)::Vector{String}
     n = length(symbols)
     basis = ["1"]
     for i in 1:(2^n - 1)
@@ -100,14 +100,14 @@ end
 Function that maps the index of normal and bit order.
 
 # Arguments
-- `base::Array{String}` : An array of strings to be combined.
-- `basis::Array{String}` : An array of the final combination of strings.
+- `base::Vector{String}` : An array of strings to be combined.
+- `basis::Vector{String}` : An array of the final combination of strings.
 
 # Return
 Returns a dict with all the mapped values.
 
 """
-function binary_index_map(base::Array{String}, basis::Array{String})
+function binary_index_map(base::Vector{String}, basis::Vector{String})
     n = length(base)
     map1 = Dict{Int, Int}()
     map2 = Dict{Int, Int}()

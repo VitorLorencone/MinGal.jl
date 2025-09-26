@@ -1,8 +1,8 @@
 include("MainObjects.jl")
 
 """
-    grade(bl::Blade)::Int
-    grade(mv::Multivector)::Int
+    grade(bl::Blade)::Integer
+    grade(mv::Multivector)::Integer
 
 Function that returns the grade of the Blade or multivector.
 
@@ -14,12 +14,12 @@ Function that returns the grade of the Blade or multivector.
 An integer, the grade of the blade or multivector.
 
 """
-function grade(bl::Blade)::Int
+function grade(bl::Blade)::Integer
     return count_ones(bitmap(bl))
 end
 
-function grade(mv::Multivector)::Int
-    grade::Int = 0
+function grade(mv::Multivector)::Integer
+    grade::Integer = 0
     for bitmap in mv.blade_array.nzind
         grade = max(grade, count_ones(bitmap-1))
     end
@@ -35,14 +35,14 @@ multivector form, it requires that it has only one blade.
 
 # Arguments
 - `bl::Blade` : A Blade.
-- `k::Int` : An integer to the Grade Projection
+- `k::Integer` : An integer to the Grade Projection
 - `mv::Blade` : A Multivector.
 
 # Return
 The result Blade. It might be the 1D blade "1"
 
 """
-function grade_projection(bl::Blade, k::Int)::Multivector
+function grade_projection(bl::Blade, k::Integer)::Multivector
     if grade(bl) == k
         return Multivector(bl)
     else
@@ -50,7 +50,7 @@ function grade_projection(bl::Blade, k::Int)::Multivector
     end
 end
 
-function grade_projection(mv::Multivector, k::Int)::Multivector
+function grade_projection(mv::Multivector, k::Integer)::Multivector
     bl = Blade(mv)
 
     if grade(bl) == k
@@ -61,7 +61,7 @@ function grade_projection(mv::Multivector, k::Int)::Multivector
 end
 
 """
-    scalar_product(ei, ej)::Int
+    scalar_product(ei, ej)::Integer
 
 Function that returns the Scalar Product between two basis blades.
 
@@ -73,7 +73,7 @@ Function that returns the Scalar Product between two basis blades.
 The result Integer.
 
 """
-function scalar_product(ei::GAType, ej::GAType)::Int
+function scalar_product(ei::GAType, ej::GAType)::Integer
     ei = Blade(ei) # Checks if it is a Blade
     ej = Blade(ej) # Checks if it is a Blade
 
@@ -107,7 +107,7 @@ blade that you want the scalar from.
 
 # Arguments
 - `mv::Multivector` : A Multivector.
-- `k::Int` : The scalar.
+- `k::Integer` : The scalar.
 ||
 - `ei::Blade` : A Blade.
 
@@ -115,7 +115,7 @@ blade that you want the scalar from.
 The scalar value.
 
 """
-function get_scalar(mv::Multivector, k::Int)::Number
+function get_scalar(mv::Multivector, k::Integer)::Number
     if (k+1) in mv.blade_array.nzind
         return mv.blade_array[k+1]
     end
@@ -141,7 +141,7 @@ blade that you want to change the scalar from.
 # Arguments
 - `mv::Multivector`
 - `val::Number` : New Value
-- `k::Int` : Index
+- `k::Integer` : Index
 ||
 - `ei::Blade` : Index
 
@@ -149,7 +149,7 @@ blade that you want to change the scalar from.
 The scalar value.
 
 """
-function set_scalar(mv::GAType, val::Number, k::Int)
+function set_scalar(mv::GAType, val::Number, k::Integer)
     mv.blade_array[k+1] = val
     return val
 end
@@ -168,7 +168,7 @@ Function that checks if the multivector has a blade.
 
 # Arguments
 - `mv::Multivector`
-- `k::Int` : Index
+- `k::Integer` : Index
 ||
 - `ei::Blade` : Index
 
@@ -176,7 +176,7 @@ Function that checks if the multivector has a blade.
 True, if yes, False, if not.
 
 """
-function has_key(mv::GAType, k::Int)::Bool
+function has_key(mv::GAType, k::Integer)::Bool
     if(get_scalar(mv, k) != 0)
         return true
     end
@@ -192,7 +192,7 @@ end
 
 # Base functions Substitution
 
-function Base.getindex(mv::GAType, k::Int)
+function Base.getindex(mv::GAType, k::Integer)
     return get_scalar(mv, k)
 end
 
@@ -200,7 +200,7 @@ function Base.getindex(mv::GAType, ei::Multivector)
     return get_scalar(mv, ei)
 end
 
-function Base.setindex!(mv::GAType, val::Number, k::Int)
+function Base.setindex!(mv::GAType, val::Number, k::Integer)
     return set_scalar(mv, val, k)
 end
 
@@ -231,7 +231,7 @@ function Base.values(mv::GAType)
     return mv.blade_array.nzval
 end
 
-function Base.haskey(mv::GAType, k::Int)
+function Base.haskey(mv::GAType, k::Integer)
     return has_key(mv, k)
 end
 

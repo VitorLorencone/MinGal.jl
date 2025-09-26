@@ -1,18 +1,15 @@
 include("OperatorOverloading.jl")
 
-# Create "id" value for any algebra
-id = Multivector([0], [1])
-
 """
     create_symbols(stringSymbols)
 
 Create and add to REPL all the (custom or basis) symbols for this Algebra.
 
 # Arguments
-- `string_symbols::Array` : An array with all the custom or basis symbols.
+- `string_symbols::Vector{String}` : An array with all the custom or basis symbols.
 
 """
-function create_symbols(string_symbols::Array)
+function create_symbols(string_symbols::Vector{String})
 
     symbol_array = []
 
@@ -25,12 +22,19 @@ function create_symbols(string_symbols::Array)
 
     for k in eachindex(symbol_array)
         symbol = symbol_array[k]
-        eval(:($symbol = Multivector([$k], [1])))
+        mv = Multivector([k], [1])
+        eval(:($symbol = $mv))
         eval(:(export $symbol))
     end
+
+    eval(:(id = Multivector([0], [1])))
+    eval(:(export id))
+
+    eval(:(I = Multivector([gb_current_algebra.max-1], [1])))
+    eval(:(export I))
 end
 
-function create_symbols_min(string_symbols::Array)
+function create_symbols_min(string_symbols::Vector{String})
 
     symbol_array = []
 
@@ -40,23 +44,37 @@ function create_symbols_min(string_symbols::Array)
 
     for k in eachindex(symbol_array)
         symbol = symbol_array[k]
-        eval(:($symbol = Multivector([2^($k-1)], [1])))
+
+        if typeof(gb_current_algebra.max) == BigInt
+            mv = Multivector([BigInt(2)^(k-1)], [1])
+            eval(:($symbol = $mv))
+        else
+            mv = Multivector([2^(k-1)], [1])
+            eval(:($symbol = $mv))
+        end
+        
         eval(:(export $symbol))
     end
+
+    eval(:(id = Multivector([0], [1])))
+    eval(:(export id))
+
+    eval(:(I = Multivector([gb_current_algebra.max-1], [1])))
+    eval(:(export I))
 end
 
 """
     Algebra(p, q, r, symbols)::Algebra
 
 Main function for creating your Algebra and adding its basis blades to REPL.
-Constructor Function of an algebraic object with parameters p, q, R^{p, q}, and its multivector space.
-If not defined, the last two parameters are automatically calculated as canonical.
+Constructor Function of an algebraic object with parameters p, q, r, R^{p, q, r}, and its multivector space.
+If not defined, the last parameter is automatically calculated as canonical.
 
 # Arguments
 - `p::Int` : The first parameter of the definition
 - `q::Int` : The second parameter of the definition
 - `r::Int` : The third parameter of the definition
-- `symbols::Array{String}` : An Array with string vectors to work with
+- `symbols::Vector{String}` : An Array with string vectors to work with
 
 # Return
 Returns the created Algebra object.
@@ -72,7 +90,5 @@ function Algebra(p = 0, q = 0, r = 0, symbols = nothing)::Algebra
         create_symbols(Al.basis_bit_order)
     end
 
-    id = Multivector([0], [1])
     return Al
-
 end

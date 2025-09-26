@@ -3,18 +3,15 @@
 # -> Redo Operation Table
 # -> More GA Functions
 # -> Fix creating huge dimensions
-# -> Dinamically create symbols
 # -> Fix Docs and Tests
 # -> Per-grade compression and new data structure
-# -> Linear Systems
-# -> Per-grade compression and new data structure
-# -> Linear Systems
+# -> Linear Systems Examples
 
 module MinGal
 
 include("Workspace.jl")
 
-export Algebra, id, grade, grade_projection
+export Algebra, grade, grade_projection
 export geometric_product, inner_product, outer_product
 export bitmap, scalar, multivector_sum, multivector_sub
 export Multivector, Blade, product_by_scalar, describe

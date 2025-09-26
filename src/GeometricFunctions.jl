@@ -1,7 +1,8 @@
 include("BasisFunctions.jl")
+include("SparseOperationFix.jl")
 
 """
-    canonical_reordering_sign(ei, ej)::Int
+    canonical_reordering_sign(ei, ej)::Integer
 
 Function that computes the reordering of a Blade to get into canonical order.
 
@@ -124,7 +125,7 @@ The result Multivector.
 
 """
 function multivector_sum(mi::GAType, mj::GAType)::GAType
-    result = mi.blade_array + mj.blade_array
+    result = sparsevec_operate(Base.:+, mi.blade_array, mj.blade_array)
     return Multivector(result)
 end
 
@@ -142,7 +143,7 @@ The result GAType.
 
 """
 function multivector_sub(mi::GAType, mj::GAType)::GAType
-    result = mi.blade_array - mj.blade_array
+    result = sparsevec_operate(Base.:-, mi.blade_array, mj.blade_array)
     return Multivector(result)
 end
 

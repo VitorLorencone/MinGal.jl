@@ -16,7 +16,7 @@ basis blades and their scalars.
 
 """
 struct Blade <: GAType
-    blade_array::SparseArrays.SparseVector{Number, Int}
+    blade_array::SparseArrays.SparseVector{Number, Integer}
 end
 
 """
@@ -25,15 +25,15 @@ end
 Struct that creates the multivector object.
 
 # Arguments
-- `blade_array::SparseArrays.SparseVector{Number, Int}` : An sparse vector with the internal values of 
+- `blade_array::SparseArrays.SparseVector{Number, Integer}` : An sparse vector with the internal values of 
 basis blades and their scalars.
 
 """
 struct Multivector <: GAType
-    blade_array::SparseArrays.SparseVector{Number, Int}
+    blade_array::SparseArrays.SparseVector{Number, Integer}
 end
 
-function Base.length(mv::GAType)::Int
+function Base.length(mv::GAType)::Integer
     return length(mv.blade_array.nzind)
 end
 
@@ -44,7 +44,7 @@ end
 Creates a Blade based on bitmap and Scalars or Converts a multivector into a blade. It may throw an error
 
 # Arguments
-- `bitmap::Int` : The bitmap that specifies what basis vectors are present in this blade 
+- `bitmap::Integer` : The bitmap that specifies what basis vectors are present in this blade 
 - `scalar::Number` : The scalar of the basis blade.
 - `mv::Multivector`
 
@@ -52,7 +52,11 @@ Creates a Blade based on bitmap and Scalars or Converts a multivector into a bla
 Returns a Blade.
 
 """
-function Blade(bitmap::Int, scalar)
+function Blade(bitmap::Integer, scalar::Number)
+    if typeof(bitmap) != typeof(gb_current_algebra.max)
+        bitmap = typeof(gb_current_algebra.max)(bitmap)
+    end
+    
     values = sparsevec([bitmap+1], [scalar], gb_current_algebra.max)
     return Blade(values)
 end
@@ -65,7 +69,7 @@ function Blade(mv::Multivector)::Blade
 end
 
 """
-    bitmap(bl::Blade)::Int
+    bitmap(bl::Blade)::Integer
 
 Returns the bitmap of the Blade
 
@@ -77,7 +81,7 @@ The bitmap
 
 """
 
-function bitmap(bl::Blade)::Int
+function bitmap(bl::Blade)::Integer
     return bl.blade_array.nzind[1]-1
 end
 
@@ -106,46 +110,61 @@ end
 Constructor function for creating multivectors.
 
 # Arguments
-- `base_vectors::Array{Int}` : An array of integers, representing the actual basis blade that exists in this object in bit order.
-- `scalars::Array{Number}` : An array of Floats, representing the scalars of each basis blade in bit order.
+- `base_vectors::Vector{Integer}` : An array of integers, representing the actual basis blade that exists in this object in bit order.
+- `scalars::Vector{Number}` : An array of Floats, representing the scalars of each basis blade in bit order.
 ||
 - `bl::Blade` : A Blade, to convert to Multivector.
 ||
-- `blades::Array{Blade}` : An array of Blades, to convert to Multivector.
+- `blades::Vector{Blade}` : An array of Blades, to convert to Multivector.
 
 # Return
 Returns a Multivector.
 
 """
 function Multivector(base_vectors::Array, scalars::Array)::Multivector
+    if typeof(gb_current_algebra.max) == BigInt
+        base_vectors = BigInt.(base_vectors)
+    end
+    
     values = sparsevec(base_vectors .+ 1, scalars, gb_current_algebra.max)
     return Multivector(values)
 end
 
 function Multivector(bl::Blade)::Multivector
-    values = sparsevec([bitmap(bl)+1], [scalar(bl)], gb_current_algebra.max)
+    btm = bitmap(bl)+1
+    if typeof(btm) != typeof(gb_current_algebra.max)
+        btm = typeof(gb_current_algebra.max)(btm)
+    end
+
+    values = sparsevec([btm], [scalar(bl)], gb_current_algebra.max)
     return Multivector(values)
 end
 
-function Multivector(blades::Array{Blade})::Multivector
+function Multivector(blades::Vector{Blade})::Multivector
     bitmaps = []
     scalars = []
     for bl in blades
         push!(bitmaps, bitmap(bl))
         push!(scalars, scalar(bl))
     end
+
+    if typeof(gb_current_algebra.max) == BigInt
+        bitmaps = BigInt.(bitmaps)
+    end
+
     values = sparsevec(bitmaps, scalars, gb_current_algebra.max)
     return Multivector(values)
 end
 
-function str_bl(n::Int, al::AlgebraFull)::String
+function str_bl(n::Integer, al::AlgebraFull)::String
     return gb_current_algebra.basis_bit_order[n]
 end
 
-function str_bl(n::Int, al::AlgebraMin)::String
+function str_bl(n::Integer, al::AlgebraMin)::String
     n -= 1
     ans = ""
-    for i in 1:sizeof(n) * 8
+    #for i in 1:sizeof(n) * 8
+    for i in 1:(floor(Int, log2(n))+1)
         if (n >> (i - 1)) & 1 == 1
             ans *= gb_current_algebra.symbols[i]
         end

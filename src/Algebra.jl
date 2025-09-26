@@ -11,22 +11,22 @@ A structure to define an algebra to be worked with its respective dimensions and
 - `p::Int` : Represents the ammount of positive dimensions
 - `q::Int` : Represents the ammount of negative dimensions
 - `r::Int` : Represents the ammount of zero dimensions
-- `symbols::Array{String}` : Array of primary symbols for the Algebra
-- `basis::Array{String}` : Array of all symbols for the Algebra, normal order
-- `basis_bit_order::Array{String}` : Array of symbols for the Algebra, bit order
-- `metric::Array{Int8}` : Another way of representing the algebra signature
-- `max::Int` : max number of Algebra, the same as 2^(p+q+r)
+- `symbols::Vector{String}` : Array of primary symbols for the Algebra
+- `basis::Vector{String}` : Array of all symbols for the Algebra, normal order
+- `basis_bit_order::Vector{String}` : Array of symbols for the Algebra, bit order
+- `metric::Vector{Int8}` : Another way of representing the algebra signature
+- `max::Integer` : max number of Algebra elements, the same as 2^(p+q+r)
 
 """
-struct AlgebraFull <: Algebra
+struct AlgebraFull{T <: Integer} <: Algebra
     p::Int
     q::Int
     r::Int
-    symbols::Array{String}
-    basis::Array{String}
-    basis_bit_order::Array{String}
-    metric::Array{Int8}
-    max::Int
+    symbols::Vector{String}
+    basis::Vector{String}
+    basis_bit_order::Vector{String}
+    metric::Vector{Int8}
+    max::T
 end
 
 """
@@ -38,18 +38,19 @@ A structure to define an algebra to be worked with its respective dimensions and
 - `p::Int` : Represents the ammount of positive dimensions
 - `q::Int` : Represents the ammount of negative dimensions
 - `r::Int` : Represents the ammount of zero dimensions
-- `max::Int` : max number of Algebra, the same as 2^(p+q+r)
+- `symbols::Vector{String}` : Array of primary symbols for the Algebra
+- `metric::Vector{Int8}` : Another way of representing the algebra signature
+- `max::Int` : max number of Algebra elements, the same as 2^(p+q+r)
 
 """
-struct AlgebraMin <: Algebra
+struct AlgebraMin{T <: Integer} <: Algebra
     p::Int
     q::Int
     r::Int
-    symbols::Array{String}
-    metric::Array{Int8}
-    max::Int
+    symbols::Vector{String}
+    metric::Vector{Int8}
+    max::T
 end
-
 
 """
     describe(al::Algebra)
@@ -92,13 +93,13 @@ the symbols for the algebra are automatically calculated as canonical.
 - `p::Int` : Represents the ammount of positive dimensions
 - `q::Int` : Represents the ammount of negative dimensions
 - `r::Int` : Represents the ammount of zero dimensions
-- `symbols::Array{String}` : Array of primary symbols for the Algebra
+- `symbols::Vector{String}` : Array of primary symbols for the Algebra
 
 # Return
 Returns the created Algebra object.
 
 """
-function create_algebra(p, q = 0, r = 0, symbols = nothing)::Algebra
+function create_algebra(p::Int, q::Int = 0, r::Int = 0, symbols = nothing)::Algebra
 
     if(p < 0)
         throw(DomainError(p, "The parameter 'p' must be greater than or equal to 0"))
@@ -111,17 +112,18 @@ function create_algebra(p, q = 0, r = 0, symbols = nothing)::Algebra
     if symbols === nothing
         symbols = canon_symbols(p, q, r)
         basis_bit_order = canon_basis_bit_order(symbols)
-        basis = sort(basis_bit_order, by = v -> length(v)) # May be commented by now
+        basis = sort(basis_bit_order, by = v -> length(v)) # May be removed for performance!!
     else
         if(length(symbols) != p+q+r)
             throw(DomainError(symbols, "The parameter 'symbols' has an incorrect length (should be equal to p+q+r)"))
         end
         basis_bit_order = canon_basis_bit_order(symbols)
-        basis = canon_basis(symbols) # May be commented by now
+        basis = canon_basis(symbols) # May be removed for performance!!
     end
 
+    # Zero first for convention
     metric::Array{Int8} = vcat(fill(0, r), fill(1, p), fill(-1, q))
-    max::Int = 2^(p+q+r)
+    max::Int = 2^(p+q+r) # Fine to be Int
 
     global gb_current_algebra = AlgebraFull(p, q, r, symbols, basis, basis_bit_order, metric, max)
     return gb_current_algebra
@@ -138,9 +140,14 @@ function create_algebra_min(p, q = 0, r = 0, symbols = canon_symbols(p, q, r))::
     end
 
     metric::Array{Int8} = vcat(fill(0, r), fill(1, p), fill(-1, q))
-    max::Int = 2^(p+q+r)
 
-    global gb_current_algebra = AlgebraMin(p, q, r, symbols, metric, max)
+    if(p+q+r > 62) # Limit number for Int64, switching to BigInt!!
+        max = BigInt(2)^(p+q+r)
+    else
+        max = Int64(2)^(p+q+r)
+    end
+
+    global gb_current_algebra = AlgebraMin{typeof(max)}(p, q, r, symbols, metric, max)
     return gb_current_algebra
 end
 
