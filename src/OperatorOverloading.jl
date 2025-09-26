@@ -19,6 +19,23 @@ function Base.:/(mv::GAType, k::Number)::GAType
     return product_by_scalar(mv, 1/k)
 end
 
+function Base.:/(k::Number, mv::GAType)::Number
+    if grade(mv) != 0
+        error("You cannot divide by a multivector")
+    end
+    return k/(mv[0])
+end
+
+function Base.:/(mv::GAType, mi::GAType)
+    if grade(mv) != 0 && grade(mi) == 0
+        return product_by_scalar(mv, 1/(mi[0]))
+    elseif grade(mv) == 0 && grade(mi) == 0
+        return mv[0]/mi[0]
+    else
+        error("You cannot divide by a multivector")
+    end
+end
+
 # \ Inner Product
 function Base.:\(mi::GAType, mj::GAType)::GAType
     return inner_product(mi,mj)
@@ -62,4 +79,9 @@ function Base.:-(k::Number, mv::GAType)::GAType
 end
 function Base.:-(mv::GAType, k::Number)::GAType
     return multivector_sub(mv, Blade(0, k))
+end
+
+# ~ reverse
+function Base.:~(mi::GAType)::GAType
+    return reverse(mi)
 end

@@ -178,7 +178,7 @@ Function that computes the geometric product of two multivectors and return its 
 The result GAType.
 
 """
-function geometric_product(ei:: GAType, ej::GAType)::GAType
+function geometric_product(ei::GAType, ej::GAType)::GAType
     result = Multivector([0],[0])
     for (i, si) in zip(ei.blade_array.nzind, ei.blade_array.nzval)
         for (j, sj) in zip(ej.blade_array.nzind, ej.blade_array.nzval)
@@ -202,7 +202,7 @@ Function that computes the outer product of two multivectors and return its resu
 The result GAType.
 
 """
-function outer_product(ei:: GAType, ej::GAType)::GAType
+function outer_product(ei::GAType, ej::GAType)::GAType
     result = Multivector([0],[0])
     for (i, si) in zip(ei.blade_array.nzind, ei.blade_array.nzval)
         for (j, sj) in zip(ej.blade_array.nzind, ej.blade_array.nzval)
@@ -226,7 +226,7 @@ Function that computes the outer product of two multivectors and return its resu
 The result GAType.
 
 """
-function inner_product(ei:: GAType, ej::GAType)::GAType
+function inner_product(ei::GAType, ej::GAType)::GAType
     result = Multivector([0],[0])
     for (i, si) in zip(ei.blade_array.nzind, ei.blade_array.nzval)
         for (j, sj) in zip(ej.blade_array.nzind, ej.blade_array.nzval)
@@ -234,5 +234,26 @@ function inner_product(ei:: GAType, ej::GAType)::GAType
         end
     end
     dropzeros!(result.blade_array)
+    return result
+end
+
+"""
+    reverse(ei::GAType)::GAType
+
+Function that computes the reverse of a multivector and return its result.
+
+# Arguments
+- `ei::Multivector` : A GAType.
+
+# Return
+The reverse of ei.
+
+"""
+function reverse(ei::GAType)::GAType
+    result = Multivector([0],[0])
+    for (i, si) in zip(ei.blade_array.nzind, ei.blade_array.nzval)
+        k = grade(Blade(i-1, si))
+        result += (-1)^(k*(k-1)/2) * Multivector([i-1], [si])
+    end
     return result
 end
