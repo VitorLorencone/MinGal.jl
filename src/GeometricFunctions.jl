@@ -252,7 +252,7 @@ The reverse of ei.
 function reverse(ei::GAType)::GAType
     result = Multivector([0],[0])
     for x in ei
-        k = grade(Blade(i-1, si))
+        k = grade(x)
         result += (-1)^(k*(k-1)/2) * x
     end
     return result
@@ -273,7 +273,7 @@ The involution of ei.
 function involution(ei::GAType)::GAType
     result = Multivector([0],[0])
     for x in ei
-        k = grade(Blade(i-1, si))
+        k = grade(x)
         result += (-1)^(k) * x
     end
     return result
@@ -482,7 +482,7 @@ function regressive_product(ei::GAType, ej::GAType)::GAType
     result = Multivector([0],[0])
     for x in ei
         for y in ej
-            result += regressive_product(Blade(i-1, si), Blade(j-1, sj))
+            result += regressive_product(x, y)
         end
     end
     dropzeros!(result.blade_array)

@@ -1,4 +1,4 @@
-# None of them gets past D = 12, maybe with multiplicative
+# None of them gets past D = 13, maybe with multiplicative
 # implementation instead of the additive one???
 
 using MinGal
