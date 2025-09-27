@@ -132,3 +132,14 @@ end
 function Base.:(>>)(mi::GAType, mj::Number)::GAType
     right_contraction(mi, Blade(mj))
 end
+
+# & regressive product
+function Base.:&(mi::GAType, mj::GAType)::GAType
+    regressive_product(mi, mj)
+end
+function Base.:&(mi::Number, mj::GAType)::GAType
+    regressive_product(Blade(mi), mj)
+end
+function Base.:&(mi::GAType, mj::Number)::GAType
+    regressive_product(mi, Blade(mj))
+end

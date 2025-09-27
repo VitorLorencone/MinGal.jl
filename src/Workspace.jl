@@ -30,8 +30,8 @@ function create_symbols(string_symbols::Vector{String})
     eval(:(id = Multivector([0], [1])))
     eval(:(export id))
 
-    eval(:(I = Multivector([gb_current_algebra.max-1], [1])))
-    eval(:(export I))
+    eval(:(eI = Multivector([gb_current_algebra.max-1], [1])))
+    eval(:(export eI))
 end
 
 function create_symbols_min(string_symbols::Vector{String})
@@ -59,8 +59,8 @@ function create_symbols_min(string_symbols::Vector{String})
     eval(:(id = Multivector([0], [1])))
     eval(:(export id))
 
-    eval(:(I = Multivector([gb_current_algebra.max-1], [1])))
-    eval(:(export I))
+    eval(:(eI = Multivector([gb_current_algebra.max-1], [1])))
+    eval(:(export eI))
 end
 
 """

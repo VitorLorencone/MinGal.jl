@@ -106,6 +106,10 @@ function bitmap(bl::Blade)::Integer
     return bl.blade_array.nzind[1]-1
 end
 
+function bitmap(mv::Multivector)::Integer
+    return bitmap(Blade(mv))
+end
+
 """
     scalar(bl::Blade)::Number
 

@@ -171,8 +171,8 @@ end
 Function that computes the geometric product of two multivectors and return its result.
 
 # Arguments
-- `ei::Multivector` : A GAType.
-- `ej::Multivector` : A GAType.
+- `ei::GAType` : A GAType.
+- `ej::GAType` : A GAType.
 
 # Return
 The result GAType.
@@ -195,8 +195,8 @@ end
 Function that computes the outer product of two multivectors and return its result.
 
 # Arguments
-- `ei::Multivector` : A GAType.
-- `ej::Multivector` : A GAType.
+- `ei::GAType` : A GAType.
+- `ej::GAType` : A GAType.
 
 # Return
 The result GAType.
@@ -219,8 +219,8 @@ end
 Function that computes the outer product of two multivectors and return its result.
 
 # Arguments
-- `ei::Multivector` : A GAType.
-- `ej::Multivector` : A GAType.
+- `ei::GAType` : A GAType.
+- `ej::GAType` : A GAType.
 
 # Return
 The result GAType.
@@ -259,20 +259,44 @@ function reverse(ei::GAType)::GAType
 end
 
 """
+    involution(ei::GAType)::GAType
+
+Function that computes the involuction of a multivector and return its result.
+
+# Arguments
+- `ei::Multivector` : A GAType.
+
+# Return
+The involution of ei.
+
+"""
+function involution(ei::GAType)::GAType
+    result = Multivector([0],[0])
+    for (i, si) in zip(ei.blade_array.nzind, ei.blade_array.nzval)
+        k = grade(Blade(i-1, si))
+        result += (-1)^(k) * Multivector([i-1], [si])
+    end
+    return result
+end
+
+"""
     left_contraction(ei::GAType, ej::GAType)::GAType
 
 Function that computes the left contraction of two multivectors and return its result.
 
 # Arguments
-- `ei::Multivector` : A GAType.
-- `ej::Multivector` : A GAType.
+- `ei::GAType` : A GAType.
+- `ej::GAType` : A GAType.
 
 # Return
 The result GAType.
 
 """
 function left_contraction(ei::Blade, ej::Blade)::Multivector
-    grade_projection(ei*ej, grade(ej) - grade(ei))
+    if grade(ei) <= grade(ej)
+        return grade_projection(ei*ej, grade(ej) - grade(ei))
+    end
+    return Multivector([0],[0])
 end
 
 function left_contraction(ei::GAType, ej::GAType)::GAType
@@ -292,15 +316,18 @@ end
 Function that computes the right contraction of two multivectors and return its result.
 
 # Arguments
-- `ei::Multivector` : A GAType.
-- `ej::Multivector` : A GAType.
+- `ei::GAType` : A GAType.
+- `ej::GAType` : A GAType.
 
 # Return
 The result GAType.
 
 """
 function right_contraction(ei::Blade, ej::Blade)::Multivector
-    grade_projection(ei*ej, grade(ei) - grade(ej))
+    if grade(ei) >= grade(ej)
+        return grade_projection(ei*ej, grade(ei) - grade(ej))
+    end
+    return Multivector([0], [0])
 end
 
 function right_contraction(ei::GAType, ej::GAType)::GAType
@@ -335,4 +362,189 @@ function grade_selection(ei::GAType, k::Number)::GAType
         end
     end
     return result
+end
+
+"""
+    invert(ei::GAType)::GAType
+
+Function that computes the inverse of a multivector (mostly versors and blades supported!!!!!) and return its result.
+May throw an error if not inversible
+
+# Arguments
+- `ei::GAType` : A GAType.
+
+# Return
+The inverse of ei.
+
+"""
+function invert(ei::GAType)::GAType
+    ei_rev = ~ei
+    denom = ei*ei_rev
+
+    if length(denom) != 1 || denom[0] == 0
+        error("Non-invertible GAType")
+    end
+
+    return ei_rev/denom[0]
+end
+
+"""
+    dual(ei::GAType)::GAType
+
+Function that computes the dual of a multivector and return its result.
+Just be careful with r>1.
+
+# Arguments
+- `ei::Multivector` : A GAType.
+
+# Return
+The dual of ei.
+
+"""
+function dual(ei::GAType)::GAType
+    if gb_current_algebra.r == 0
+        key = gb_current_algebra.max-1
+        I = Multivector([key], [1])
+        return ei*I*canonical_reordering_sign(Blade(key, 1), Blade(key, 1)) 
+    else
+        result = Multivector([0], [0])
+        n = gb_current_algebra.max
+        for i in ei
+            key = bitmap(i)
+            value = scalar(i)
+            dual_index = n - key - 1
+            sign = canonical_reordering_sign(Blade(key, 1), Blade(dual_index, 1))
+            if sign < 0
+                result[dual_index] = -value
+            else
+                result[dual_index] = value
+            end
+        end
+        return result
+    end
+end
+
+"""
+    dual(ei::GAType)::GAType
+
+Function that computes the undual of a multivector and return its result.
+Just be careful with r>1.
+
+# Arguments
+- `ei::Multivector` : A GAType.
+
+# Return
+The undual of ei.
+
+"""
+function undual(ei::GAType)::GAType
+    I = Multivector([gb_current_algebra.max-1], [1])
+
+    if gb_current_algebra.r == 0
+        return ei<<I
+
+    else
+        result = Multivector([0], [0])
+        n = gb_current_algebra.max
+        for i in ei
+            key = bitmap(i)
+            value = scalar(i)
+            dual_index = n - key - 1
+            sign = canonical_reordering_sign(Blade(dual_index, 1), Blade(key, 1))
+            if sign < 0
+                result[dual_index] = -value
+            else
+                result[dual_index] = value
+            end
+        end
+        return result
+    end
+end
+
+"""
+    regressive_product(ei::GAType, ej::GAType)::GAType
+
+Function that computes the regressive product of two multivectors and return its result.
+
+# Arguments
+- `ei::GAType` : A GAType.
+- `ej::GAType` : A GAType.
+
+# Return
+The result GAType.
+
+"""
+function regressive_product(ei::Blade, ej::Blade)::Multivector
+    return undual(dual(ei)^dual(ej))
+end
+
+function regressive_product(ei::GAType, ej::GAType)::GAType
+    result = Multivector([0],[0])
+    for (i, si) in zip(ei.blade_array.nzind, ei.blade_array.nzval)
+        for (j, sj) in zip(ej.blade_array.nzind, ej.blade_array.nzval)
+            result += regressive_product(Blade(i-1, si), Blade(j-1, sj))
+        end
+    end
+    dropzeros!(result.blade_array)
+    return result
+end
+
+"""
+    isScalar(ei::GAType)::Bool
+
+Function that checks where a GAType is a Scalar or not.
+
+# Arguments
+- `ei::GAType` : A GAType.
+
+"""
+function isScalar(ei::GAType)::Bool
+    dropzeros!(ei.blade_array)
+    return ei.blade_array.nzind == [1] || length(ei) == 0
+end
+
+"""
+    isBlade(ei::GAType)::Bool
+
+Function that checks where a GAType is a Blade or not.
+
+# Arguments
+- `ei::GAType` : A GAType.
+
+"""
+function isBlade(ei::GAType)::Bool
+    dropzeros!(ei.blade_array)
+    return length(ei) == 1
+end
+
+# TODO generic exp whe A² is not a scalar
+"""
+    exp_ga(ei::GAType)::GAType
+
+Function that computes the exponential of elements that squares to a scalar.
+A more generic function was not yet implemented
+
+# Arguments
+- `ei::GAType` : A GAType.
+
+# Return
+The result GAType.
+
+"""
+function exp_ga(ei::GAType)::GAType
+    A2 = ei*ei
+    if isScalar(A2) && A2[0] == 0
+        return ei+1
+    elseif isScalar(A2)
+        k = A2[0]
+        if k < 0
+            a = sqrt(-k)
+            return (sin(a)/a) * ei + cos(a)
+        else
+            a = sqrt(k)
+            return (sinh(a)/a) * ei + cosh(a)
+        end
+    else
+        error("There is no implementation of exp when element do not squares to a scalar")
+    end
 end
