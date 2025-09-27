@@ -56,7 +56,7 @@ function grade_projection(mv::Multivector, k::Integer)::Multivector
     if grade(bl) == k
         return Multivector(bl)
     else
-        return Multivector(Blade(0,0))
+        return Multivector([0],[0])
     end
 end
 

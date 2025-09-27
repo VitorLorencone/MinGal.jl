@@ -75,7 +75,7 @@ The result Blade.
 """
 function outer_product(ei::Blade, ej::Blade)::Multivector
     if bitmap(ei) & bitmap(ej) != 0
-        return Multivector(Blade(0, 0))
+        return Multivector([0],[0])
     end
 
     bitmap_value::Number = bitmap(ei) ⊻ bitmap(ej)
@@ -180,9 +180,9 @@ The result GAType.
 """
 function geometric_product(ei::GAType, ej::GAType)::GAType
     result = Multivector([0],[0])
-    for (i, si) in zip(ei.blade_array.nzind, ei.blade_array.nzval)
-        for (j, sj) in zip(ej.blade_array.nzind, ej.blade_array.nzval)
-            result += geometric_product(Blade(i-1, si), Blade(j-1, sj))
+    for x in ei
+        for y in ej
+            result += geometric_product(x, y)
         end
     end
     dropzeros!(result.blade_array)
@@ -202,11 +202,11 @@ Function that computes the outer product of two multivectors and return its resu
 The result GAType.
 
 """
-function outer_product(ei::GAType, ej::GAType)::GAType
+function outer_product(ei::GAType, ej::GAType)::GAType    
     result = Multivector([0],[0])
-    for (i, si) in zip(ei.blade_array.nzind, ei.blade_array.nzval)
-        for (j, sj) in zip(ej.blade_array.nzind, ej.blade_array.nzval)
-            result += outer_product(Blade(i-1, si), Blade(j-1, sj))
+    for x in ei
+        for y in ej
+            result += outer_product(x, y)
         end
     end
     dropzeros!(result.blade_array)
@@ -228,9 +228,9 @@ The result GAType.
 """
 function inner_product(ei::GAType, ej::GAType)::GAType
     result = Multivector([0],[0])
-    for (i, si) in zip(ei.blade_array.nzind, ei.blade_array.nzval)
-        for (j, sj) in zip(ej.blade_array.nzind, ej.blade_array.nzval)
-            result += inner_product(Blade(i-1, si), Blade(j-1, sj))
+    for x in ei
+        for y in ej
+            result += inner_product(x, y)
         end
     end
     dropzeros!(result.blade_array)
@@ -251,9 +251,9 @@ The reverse of ei.
 """
 function reverse(ei::GAType)::GAType
     result = Multivector([0],[0])
-    for (i, si) in zip(ei.blade_array.nzind, ei.blade_array.nzval)
+    for x in ei
         k = grade(Blade(i-1, si))
-        result += (-1)^(k*(k-1)/2) * Multivector([i-1], [si])
+        result += (-1)^(k*(k-1)/2) * x
     end
     return result
 end
@@ -272,9 +272,9 @@ The involution of ei.
 """
 function involution(ei::GAType)::GAType
     result = Multivector([0],[0])
-    for (i, si) in zip(ei.blade_array.nzind, ei.blade_array.nzval)
+    for x in ei
         k = grade(Blade(i-1, si))
-        result += (-1)^(k) * Multivector([i-1], [si])
+        result += (-1)^(k) * x
     end
     return result
 end
@@ -301,9 +301,9 @@ end
 
 function left_contraction(ei::GAType, ej::GAType)::GAType
     result = Multivector([0],[0])
-    for (i, si) in zip(ei.blade_array.nzind, ei.blade_array.nzval)
-        for (j, sj) in zip(ej.blade_array.nzind, ej.blade_array.nzval)
-            result += left_contraction(Blade(i-1, si), Blade(j-1, sj))
+    for x in ei
+        for y in ej
+            result += left_contraction(x, y)
         end
     end
     dropzeros!(result.blade_array)
@@ -332,9 +332,9 @@ end
 
 function right_contraction(ei::GAType, ej::GAType)::GAType
     result = Multivector([0],[0])
-    for (i, si) in zip(ei.blade_array.nzind, ei.blade_array.nzval)
-        for (j, sj) in zip(ej.blade_array.nzind, ej.blade_array.nzval)
-            result += right_contraction(Blade(i-1, si), Blade(j-1, sj))
+    for x in ei
+        for y in ej
+            result += right_contraction(x, y)
         end
     end
     dropzeros!(result.blade_array)
@@ -480,8 +480,8 @@ end
 
 function regressive_product(ei::GAType, ej::GAType)::GAType
     result = Multivector([0],[0])
-    for (i, si) in zip(ei.blade_array.nzind, ei.blade_array.nzval)
-        for (j, sj) in zip(ej.blade_array.nzind, ej.blade_array.nzval)
+    for x in ei
+        for y in ej
             result += regressive_product(Blade(i-1, si), Blade(j-1, sj))
         end
     end
