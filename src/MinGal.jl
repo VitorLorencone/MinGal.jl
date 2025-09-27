@@ -1,9 +1,8 @@
 # TODO
 # -> Implement the multiplicative approach
-# -> More GA Functions (Dual)
-# -> Fix Docs and Tests
-# -> Linear Systems Examples
 # -> Optimize some Geometric Functions
+# -> Update Docs and Tests
+# -> More examples
 
 module MinGal
 
