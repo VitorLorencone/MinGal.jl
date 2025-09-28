@@ -405,10 +405,12 @@ The dual of ei.
 """
 function dual(ei::GAType)::GAType
     if gb_current_algebra.r == 0
+        # Polarity
         key = gb_current_algebra.max-1
         I = Multivector([key], [1])
         return ei*I*canonical_reordering_sign(Blade(key, 1), Blade(key, 1)) 
     else
+        # Hodge
         result = Multivector([0], [0])
         n = gb_current_algebra.max
         for i in ei
@@ -427,7 +429,7 @@ function dual(ei::GAType)::GAType
 end
 
 """
-    dual(ei::GAType)::GAType
+    undual(ei::GAType)::GAType
 
 Function that computes the undual of a multivector and return its result.
 Just be careful with r>1.
@@ -440,12 +442,12 @@ The undual of ei.
 
 """
 function undual(ei::GAType)::GAType
-    I = Multivector([gb_current_algebra.max-1], [1])
-
     if gb_current_algebra.r == 0
+        # Polarity
+        I = Multivector([gb_current_algebra.max-1], [1])
         return ei<<I
-
     else
+        # Hodge
         result = Multivector([0], [0])
         n = gb_current_algebra.max
         for i in ei
