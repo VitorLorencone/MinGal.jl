@@ -345,6 +345,8 @@ end
     grade_selection(ei::GAType, k::Number)::GAType
 
 Function that retrieves the k grade part of a GAType.
+Duplicated, since grade_projection does the same, but 
+a new algorithm and more generalized.
 
 # Arguments
 - `ei::Multivector` : A GAType.
