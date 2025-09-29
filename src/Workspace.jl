@@ -1,5 +1,12 @@
 include("OperatorOverloading.jl")
 
+function create_special_symbols()
+    eval(:(id = Multivector([0], [1])))
+    eval(:(export id))
+    eval(:(eI = Multivector([gb_current_algebra.max-1], [1])))
+    eval(:(export eI))
+end
+
 """
     create_symbols(stringSymbols)
 
@@ -27,11 +34,7 @@ function create_symbols(string_symbols::Vector{String})
         eval(:(export $symbol))
     end
 
-    eval(:(id = Multivector([0], [1])))
-    eval(:(export id))
-
-    eval(:(eI = Multivector([gb_current_algebra.max-1], [1])))
-    eval(:(export eI))
+    create_special_symbols()
 end
 
 function create_symbols_min(string_symbols::Vector{String})
@@ -46,21 +49,17 @@ function create_symbols_min(string_symbols::Vector{String})
         symbol = symbol_array[k]
 
         if typeof(gb_current_algebra.max) == BigInt
-            mv = Multivector([BigInt(2)^(k-1)], [1])
+            mv = Multivector([BigInt(1)<<(k-1)], [1])
             eval(:($symbol = $mv))
         else
-            mv = Multivector([2^(k-1)], [1])
+            mv = Multivector([1<<(k-1)], [1])
             eval(:($symbol = $mv))
         end
         
         eval(:(export $symbol))
     end
 
-    eval(:(id = Multivector([0], [1])))
-    eval(:(export id))
-
-    eval(:(eI = Multivector([gb_current_algebra.max-1], [1])))
-    eval(:(export eI))
+    create_special_symbols()
 end
 
 """
@@ -84,7 +83,13 @@ function Algebra(p = 0, q = 0, r = 0, symbols = nothing)::Algebra
 
     if p+q+r >= 15
         Al = create_algebra_min(p, q, r)
-        create_symbols_min(Al.symbols)
+        
+        if(p+q+r <= 50000)
+            create_symbols_min(Al.symbols)
+        else
+            create_special_symbols()
+        end
+
     else
         Al = create_algebra(p, q, r, symbols)
         create_symbols(Al.basis_bit_order)

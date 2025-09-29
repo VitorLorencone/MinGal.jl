@@ -80,7 +80,7 @@ Returns a list with all combinations of the elements, forming the basis of the m
 function canon_basis_bit_order(symbols)::Vector{String}
     n = length(symbols)
     basis = ["1"]
-    for i in 1:(2^n - 1)
+    for i in 1:(1<<n - 1)
         val = String[]
         for j in 0:(n-1)
             if (i >> j) & 1 == 1
@@ -113,7 +113,7 @@ function binary_index_map(base::Vector{String}, basis::Vector{String})
     map2 = Dict{Int, Int}()
     map1[0] = 1
     map2[1] = 0
-    for i in 1:(2^n - 1)
+    for i in 1:(1<<n - 1)
         bits = digits(i, base=2, pad=n)
         str = join([base[j] for j in 1:n if bits[j] == 1])
         k = findfirst(==(str), basis)

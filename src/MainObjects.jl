@@ -200,6 +200,12 @@ end
 
 # Pretty print a GAType
 function Base.show(io::IO, mv::GAType)
+
+    if gb_current_algebra.symbols == []
+        print(mv.blade_array)
+        return nothing
+    end
+
     bitmaps = mv.blade_array.nzind
     scalars = mv.blade_array.nzval
     ans = ""

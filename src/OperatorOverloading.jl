@@ -51,11 +51,22 @@ end
 function Base.:^(mi::GAType, mj::GAType)::GAType
     return outer_product(mi,mj)
 end
-function Base.:^(mi::GAType, mj::Number)::GAType
-    return outer_product(mi, Blade(mj))
-end
 function Base.:^(mi::Number, mj::GAType)::GAType
-    return outer_product(Blade(mi), mj)
+    return inner_product(Blade(mi), mj)
+end
+
+# ^ Exponentiation
+function Base.:^(mi::GAType, mj::Number)::GAType
+    result = Multivector([0],[1])
+    for _ in 1:mj
+        result = geometric_product(result, mi)
+    end
+    return result
+end
+
+# ^-n invert function
+function Base.inv(mi::GAType)::GAType
+    return invert(mi)
 end
 
 # == or != comparison

@@ -70,7 +70,7 @@ function describe(al::AlgebraFull)
     println("- basis: $(al.basis)")
     println("- basis_bit_order: $(al.basis_bit_order)")
     println("- metric: $(al.metric)")
-    println("- max: $(al.max)")
+    print("- max: $(al.max)")
 end
 
 function describe(al::AlgebraMin)
@@ -80,7 +80,18 @@ function describe(al::AlgebraMin)
     println("- r: $(al.r)")
     println("- symbols: $(al.symbols)")
     println("- metric: $(al.metric)")
-    println("- max: $(al.max)")
+    print("- max: $(al.max)")
+end
+
+function Base.show(io::IO, al::AlgebraFull)
+    describe(al)
+end
+
+function Base.show(io::IO, al::AlgebraMin)
+    println("Algebra:")
+    println("- p: $(al.p)")
+    println("- q: $(al.q)")
+    print("- r: $(al.r)")
 end
 
 """
@@ -123,13 +134,13 @@ function create_algebra(p::Int, q::Int = 0, r::Int = 0, symbols = nothing)::Alge
 
     # Zero first for convention
     metric::Array{Int8} = vcat(fill(0, r), fill(1, p), fill(-1, q))
-    max::Int = 2^(p+q+r) # Fine to be Int
+    max::Int = 1<<(p+q+r) # Fine to be Int
 
     global gb_current_algebra = AlgebraFull(p, q, r, symbols, basis, basis_bit_order, metric, max)
     return gb_current_algebra
 end
 
-function create_algebra_min(p, q = 0, r = 0, symbols = canon_symbols(p, q, r))::Algebra
+function create_algebra_min(p, q = 0, r = 0)::Algebra
 
     if(p < 0)
         throw(DomainError(p, "The parameter 'p' must be greater than or equal to 0"))
@@ -141,10 +152,16 @@ function create_algebra_min(p, q = 0, r = 0, symbols = canon_symbols(p, q, r))::
 
     metric::Array{Int8} = vcat(fill(0, r), fill(1, p), fill(-1, q))
 
-    if(p+q+r > 62) # Limit number for Int64, switching to BigInt!!
-        max = BigInt(2)^(p+q+r)
+    if(p+q+r <= 50000)
+        symbols = canon_symbols(p, q, r)
     else
-        max = Int64(2)^(p+q+r)
+        symbols = []
+    end
+
+    if(p+q+r > 62) # Limit number for Int64, switching to BigInt!!
+        max = BigInt(1)<<(p+q+r)
+    else
+        max = Int64(1)<<(p+q+r)
     end
 
     global gb_current_algebra = AlgebraMin{typeof(max)}(p, q, r, symbols, metric, max)
