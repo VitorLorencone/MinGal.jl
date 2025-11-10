@@ -119,7 +119,7 @@ end
 
 # ~ reverse
 function Base.:~(mi::GAType)::GAType
-    return reverse(mi)
+    return revert(mi)
 end
 
 # << left contraction

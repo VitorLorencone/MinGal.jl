@@ -1,12 +1,42 @@
 include("../src/MinGal.jl")
-using .Mingal
+using .MinGal
 using Test
 
-Al3D = Algebra(3)
-@test Al3D.p == 3
-@test Al3D.q == 0
-@test Al3D.VectorBasis == ["e1", "e2", "e3"]
-@test Mingal.CurrentAlgebra.Basis == [("1", 1), ("e1", 2), ("e2", 3), ("e3", 4), ("e1e2", 5), ("e1e3", 6), ("e2e3", 7), ("e1e2e3", 8)]
-@test Mingal.CurrentAlgebra.Indexes == [[0], [1], [2], [3], [1, 2], [1, 3], [2, 3], [1, 2, 3]]
-@test_throws "The parameter p must be greater than 0" Algebra(-1)
-@test_throws "The parameter q must be greater than 0" Algebra(3,-5)
+# AlgebraFull
+@testset "AlgebraFull Tests" begin
+    Al3D = MinGal.create_algebra(3)
+    
+    @test isa(Al3D, MinGal.AlgebraFull)
+    @test Al3D.p == 3
+    @test Al3D.q == 0
+    @test Al3D.r == 0
+    @test length(Al3D.symbols) == 3
+    @test length(Al3D.basis_bit_order) == 8
+    @test Al3D.max == 8
+    
+    @test_throws DomainError MinGal.create_algebra(-1)
+    @test_throws DomainError MinGal.create_algebra(3, -2)
+    @test_throws DomainError MinGal.create_algebra(3, 0, -1)
+    
+    custom_symbols = ["x", "y", "z"]
+    AlCustom = MinGal.create_algebra(3, 0, 0, custom_symbols)
+    @test AlCustom.symbols == custom_symbols
+    @test length(AlCustom.basis) == 8
+end
+
+# AlgebraMin
+@testset "AlgebraMin Tests" begin
+    AlMin = MinGal.create_algebra_min(2, 1)
+    
+    @test isa(AlMin, MinGal.AlgebraMin)
+    @test AlMin.p == 2
+    @test AlMin.q == 1
+    @test AlMin.r == 0
+    @test length(AlMin.metric) == 3
+    @test AlMin.metric == Int8[1, 1, -1]
+    @test AlMin.max == 1<<3
+    
+    @test_throws DomainError MinGal.create_algebra_min(-1)
+    @test_throws DomainError MinGal.create_algebra_min(2, -3)
+    @test_throws DomainError MinGal.create_algebra_min(2, 0, -5)
+end

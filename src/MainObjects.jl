@@ -36,6 +36,7 @@ struct Multivector <: GAType
 end
 
 function Base.length(mv::GAType)::Integer
+    dropzeros!(mv.blade_array)
     return length(mv.blade_array.nzind)
 end
 
@@ -68,8 +69,10 @@ function Blade(bitmap::Integer, scalar::Number)
 end
 
 function Blade(mv::Multivector)::Blade
-    if length(mv) != 1
+    if length(mv) > 1
         throw(DomainError(mv, "You cannot convert this multivector to a blade."))
+    elseif length(mv) == 0
+        return Blade(0)
     end
     return Blade(mv.blade_array.nzind[1]-1, mv.blade_array.nzval[1])
 end

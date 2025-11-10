@@ -99,15 +99,13 @@ The result Blade.
 
 """
 function inner_product(ei::Blade, ej::Blade)::Multivector
-
     k = grade(ei)
     l = grade(ej)
+
     if k != 0 && l != 0
         return grade_projection(geometric_product(ei, ej), abs(k-l))
-    elseif k == 0
-        return Multivector(ej)
     else
-        return Multivector(ei)
+        return geometric_product(ei, ej)
     end
 end
 
@@ -238,7 +236,7 @@ function inner_product(ei::GAType, ej::GAType)::GAType
 end
 
 """
-    reverse(ei::GAType)::GAType
+    revert(ei::GAType)::GAType
 
 Function that computes the reverse of a multivector and return its result.
 
@@ -249,7 +247,7 @@ Function that computes the reverse of a multivector and return its result.
 The reverse of ei.
 
 """
-function reverse(ei::GAType)::GAType
+function revert(ei::GAType)::GAType
     result = Multivector([0],[0])
     for x in ei
         k = grade(x)

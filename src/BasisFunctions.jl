@@ -90,7 +90,7 @@ function scalar_product(ei::GAType, ej::GAType)::Integer
         return 0
     elseif i >= 1 && j <= gb_current_algebra.r
         return 0
-    elseif i > gb_current_algebra.r && j <= gb_current_algebra.r + gb_current_algebra.p
+    elseif i >= gb_current_algebra.r && j <= gb_current_algebra.r + gb_current_algebra.p
         return 1
     else
         return -1
@@ -101,12 +101,12 @@ end
     get_scalar(mv, k)::Number ||
     get_scalar(mv, ei)::Number
 
-Function that returns the scalar value in index k from multivector mv.
+Function that returns the scalar value in index k from GAType mv.
 The index k follows the bit order basis.The ei value represents the 
 blade that you want the scalar from.
 
 # Arguments
-- `mv::Multivector` : A Multivector.
+- `mv::GAType` : A GAType.
 - `k::Integer` : The scalar.
 ||
 - `ei::Blade` : A Blade.
@@ -115,14 +115,14 @@ blade that you want the scalar from.
 The scalar value.
 
 """
-function get_scalar(mv::Multivector, k::Integer)::Number
+function get_scalar(mv::GAType, k::Integer)::Number
     if (k+1) in mv.blade_array.nzind
         return mv.blade_array[k+1]
     end
     return 0
 end
 
-function get_scalar(mv::Multivector, ei::Multivector)::Number
+function get_scalar(mv::GAType, ei::GAType)::Number
     bl = Blade(ei)
     if (bitmap(bl)+1) in mv.blade_array.nzind
         return mv.blade_array[bitmap(bl)+1]
@@ -134,12 +134,12 @@ end
     set_scalar(mv, val, k)::Number ||
     set_scalar(mv, val, ei)::Number
 
-Function that changes the scalar value in index k from multivector mv.
+Function that changes the scalar value in index k from GAType mv.
 The index k follows the bit order basis.The ei value represents the 
 blade that you want to change the scalar from.
 
 # Arguments
-- `mv::Multivector`
+- `mv::GAType`
 - `val::Number` : New Value
 - `k::Integer` : Index
 ||
@@ -154,7 +154,7 @@ function set_scalar(mv::GAType, val::Number, k::Integer)
     return val
 end
 
-function set_scalar(mv::GAType, val::Number, ei::Multivector)
+function set_scalar(mv::GAType, val::Number, ei::GAType)
     bl = Blade(ei)
     mv.blade_array[bitmap(bl)+1] = val
     return val
@@ -164,10 +164,10 @@ end
     has_key(mv, k)::Bool ||
     has_key(mv, ei)::Bool
 
-Function that checks if the multivector has a blade.
+Function that checks if the GAType has a blade.
 
 # Arguments
-- `mv::Multivector`
+- `mv::GAType`
 - `k::Integer` : Index
 ||
 - `ei::Blade` : Index
@@ -183,7 +183,7 @@ function has_key(mv::GAType, k::Integer)::Bool
     return false
 end
 
-function has_key(mv::GAType, ei::Multivector)::Bool
+function has_key(mv::GAType, ei::GAType)::Bool
     if(get_scalar(mv, ei) != 0)
         return true
     end
@@ -240,7 +240,7 @@ function Base.getindex(mv::GAType, k::Integer)
     return get_scalar(mv, k)
 end
 
-function Base.getindex(mv::GAType, ei::Multivector)
+function Base.getindex(mv::GAType, ei::GAType)
     return get_scalar(mv, ei)
 end
 
@@ -248,7 +248,7 @@ function Base.setindex!(mv::GAType, val::Number, k::Integer)
     return set_scalar(mv, val, k)
 end
 
-function Base.setindex!(mv::GAType, val::Number, ei::Multivector)
+function Base.setindex!(mv::GAType, val::Number, ei::GAType)
     return set_scalar(mv, val, ei)
 end
 
@@ -279,6 +279,6 @@ function Base.haskey(mv::GAType, k::Integer)
     return has_key(mv, k)
 end
 
-function Base.haskey(mv::GAType, ei::Multivector)
+function Base.haskey(mv::GAType, ei::GAType)
     return has_key(mv, ei)
 end
