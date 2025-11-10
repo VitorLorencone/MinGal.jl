@@ -79,20 +79,40 @@ If not defined, the last parameter is automatically calculated as canonical.
 Returns the created Algebra object.
 
 """
-function Algebra(p = 0, q = 0, r = 0, symbols = nothing)::Algebra
+function Algebra(p = 0, q = 0, r = 0, symbols = nothing, type = nothing)::Algebra
 
-    if p+q+r >= 15
-        Al = create_algebra_min(p, q, r)
-        
-        if(p+q+r <= 50000)
+    if type !== nothing
+
+        if type == "full"
+            Al = create_algebra(p, q, r, symbols)
+            create_symbols(Al.basis_bit_order)
+
+        elseif type == "min"
+            Al = create_algebra_min(p, q, r)
             create_symbols_min(Al.symbols)
-        else
-            create_special_symbols()
-        end
 
+        elseif type == "special"
+            Al = create_algebra_min(p, q, r)
+            create_special_symbols()
+
+        else
+            throw(Error(type, "Type does not exist."))
+        end
+        
     else
-        Al = create_algebra(p, q, r, symbols)
-        create_symbols(Al.basis_bit_order)
+        if p+q+r >= 15
+            Al = create_algebra_min(p, q, r)
+            
+            if(p+q+r <= 50000)
+                create_symbols_min(Al.symbols)
+            else
+                create_special_symbols()
+            end
+
+        else
+            Al = create_algebra(p, q, r, symbols)
+            create_symbols(Al.basis_bit_order)
+        end
     end
 
     return Al

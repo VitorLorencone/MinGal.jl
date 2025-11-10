@@ -190,6 +190,24 @@ function has_key(mv::GAType, ei::Multivector)::Bool
     return false
 end
 
+function canonical_basis(al::Algebra = gb_current_algebra)::GAVector
+    if typeof(gb_current_algebra.max) == BigInt
+        return [Blade(BigInt(1)<<(i-1), 1) for i in 1:(al.p + al.q + al.r)]
+    else
+        return [Blade(1<<(i-1), 1) for i in 1:(al.p + al.q + al.r)]
+    end
+    
+end
+
+function chain(coeff::Vector, al::Algebra = gb_current_algebra)::GAType
+    size = min(length(coeff), al.p + al.q + al.r)
+    if typeof(gb_current_algebra.max) == BigInt
+        return sum([Blade(BigInt(1)<<(i-1), coeff[i]) for i in 1:size])
+    else
+        return sum([Blade(1<<(i-1), coeff[i]) for i in 1:size])
+    end
+end
+
 # Base functions Substitution
 
 function Base.getindex(mv::GAType, k::Integer)

@@ -84,7 +84,12 @@ function describe(al::AlgebraMin)
 end
 
 function Base.show(io::IO, al::AlgebraFull)
-    describe(al)
+    println("Algebra:")
+    println("- p: $(al.p)")
+    println("- q: $(al.q)")
+    println("- r: $(al.r)")
+    println("- basis_bit_order: $(al.basis_bit_order)")
+    print("- max: $(al.max)")
 end
 
 function Base.show(io::IO, al::AlgebraMin)
