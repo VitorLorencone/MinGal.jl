@@ -190,6 +190,18 @@ function has_key(mv::GAType, ei::Multivector)::Bool
     return false
 end
 
+"""
+    canonical_basis(al::Algebra)::GAVector
+
+Function that returns an iterable list with only the canonical basis blades
+
+# Arguments
+- `al::Algebra`
+
+# Return
+A Vector (GAVector) with only the canonical basis blades
+
+"""
 function canonical_basis(al::Algebra = gb_current_algebra)::GAVector
     if typeof(gb_current_algebra.max) == BigInt
         return [Blade(BigInt(1)<<(i-1), 1) for i in 1:(al.p + al.q + al.r)]
@@ -199,6 +211,20 @@ function canonical_basis(al::Algebra = gb_current_algebra)::GAVector
     
 end
 
+"""
+    chain(coeff::Vector, al::Algebra)::GAType
+
+Function that 'chains' the canonical basis with a vector of coefficients. It
+sums the coeff[i]*canonical[i] with the rest, good for translating matrices lines
+into a GA object.
+
+# Arguments
+- `al::Algebra`
+
+# Return
+a single GAType, the chained value
+
+"""
 function chain(coeff::Vector, al::Algebra = gb_current_algebra)::GAType
     size = min(length(coeff), al.p + al.q + al.r)
     if typeof(gb_current_algebra.max) == BigInt
