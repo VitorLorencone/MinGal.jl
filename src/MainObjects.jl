@@ -15,7 +15,6 @@ and The scalar of the basis blade.
 # Arguments
 basis blades and their scalars.
 
-
 """
 struct Blade <: GAType
     blade_array::SparseArrays.SparseVector{Number, Integer}

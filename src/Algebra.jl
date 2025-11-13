@@ -145,6 +145,21 @@ function create_algebra(p::Int, q::Int = 0, r::Int = 0, symbols = nothing)::Alge
     return gb_current_algebra
 end
 
+"""
+    create_algebra_min(p, [q], [r])
+
+Constructor Function of an algebraic object with signature p, q, r. There are no
+symbos in the "min" algebra representation.
+
+# Arguments
+- `p::Int` : Represents the ammount of positive dimensions
+- `q::Int` : Represents the ammount of negative dimensions
+- `r::Int` : Represents the ammount of zero dimensions
+
+# Return
+Returns the created Algebra object.
+
+"""
 function create_algebra_min(p, q = 0, r = 0)::Algebra
 
     if(p < 0)

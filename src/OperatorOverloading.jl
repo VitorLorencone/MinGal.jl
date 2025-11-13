@@ -122,6 +122,11 @@ function Base.:~(mi::GAType)::GAType
     return revert(mi)
 end
 
+# ! dual
+function Base.:!(mi::GAType)::GAType
+    return dual(mi)
+end
+
 # << left contraction
 function Base.:(<<)(mi::GAType, mj::GAType)::GAType
     left_contraction(mi, mj)

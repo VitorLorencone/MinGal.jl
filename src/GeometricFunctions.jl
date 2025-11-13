@@ -7,8 +7,8 @@ include("SparseOperationFix.jl")
 Function that computes the reordering of a Blade to get into canonical order.
 
 # Arguments
-- `ei::Blade` : A Blade.
-- `ej::Blade` : A Blade.
+- `ei::Blade`
+- `ej::Blade`
 
 # Return
 The sign value, either 1 or -1.
@@ -34,8 +34,8 @@ end
 Function that returns the Geometric Product between two blades.
 
 # Arguments
-- `ei::Blade` : A Blade.
-- `ej::Blade` : A Blade.
+- `ei::Blade`
+- `ej::Blade`
 
 # Return
 The result Blade.
@@ -66,8 +66,8 @@ end
 Function that returns the Outer Product between two blades.
 
 # Arguments
-- `ei::Blade` : A Blade.
-- `ej::Blade` : A Blade.
+- `ei::Blade`
+- `ej::Blade`
 
 # Return
 The result Blade.
@@ -91,8 +91,8 @@ end
 Function that returns the Inner Product between two blades.
 
 # Arguments
-- `ei::Blade` : A Blade.
-- `ej::Blade` : A Blade.
+- `ei::Blade`
+- `ej::Blade`
 
 # Return
 The result Blade.
@@ -116,7 +116,7 @@ Function that sums two GAType and return its result.
 
 # Arguments
 - `mi::GAType`
-- `mj::GAType``
+- `mj::GAType`
 
 # Return
 The result Multivector.
@@ -134,7 +134,7 @@ Function that subtracts two multivectors and return its result.
 
 # Arguments
 - `mi::GAType`
-- `mj::GAType``
+- `mj::GAType`
 
 # Return
 The result GAType.
@@ -152,7 +152,7 @@ Function that calculates the product by scalar between a blade and a scalar.
 
 # Arguments
 - `mv::GAType`
-- `k::Number``
+- `k::Number`
 
 # Return
 The result GAType.
@@ -169,8 +169,8 @@ end
 Function that computes the geometric product of two multivectors and return its result.
 
 # Arguments
-- `ei::GAType` : A GAType.
-- `ej::GAType` : A GAType.
+- `ei::GAType`
+- `ej::GAType`
 
 # Return
 The result GAType.
@@ -178,6 +178,7 @@ The result GAType.
 """
 function geometric_product(ei::GAType, ej::GAType)::GAType
     result = Multivector([0],[0])
+    # x and y are both Blade types
     for x in ei
         for y in ej
             result += geometric_product(x, y)
@@ -193,8 +194,8 @@ end
 Function that computes the outer product of two multivectors and return its result.
 
 # Arguments
-- `ei::GAType` : A GAType.
-- `ej::GAType` : A GAType.
+- `ei::GAType`
+- `ej::GAType`
 
 # Return
 The result GAType.
@@ -202,6 +203,7 @@ The result GAType.
 """
 function outer_product(ei::GAType, ej::GAType)::GAType    
     result = Multivector([0],[0])
+    # x and y are both Blade types
     for x in ei
         for y in ej
             result += outer_product(x, y)
@@ -217,8 +219,8 @@ end
 Function that computes the outer product of two multivectors and return its result.
 
 # Arguments
-- `ei::GAType` : A GAType.
-- `ej::GAType` : A GAType.
+- `ei::GAType`
+- `ej::GAType`
 
 # Return
 The result GAType.
@@ -226,6 +228,7 @@ The result GAType.
 """
 function inner_product(ei::GAType, ej::GAType)::GAType
     result = Multivector([0],[0])
+    # x and y are both Blade types
     for x in ei
         for y in ej
             result += inner_product(x, y)
@@ -241,7 +244,7 @@ end
 Function that computes the reverse of a multivector and return its result.
 
 # Arguments
-- `ei::Multivector` : A GAType.
+- `ei::Multivector`
 
 # Return
 The reverse of ei.
@@ -262,7 +265,7 @@ end
 Function that computes the involuction of a multivector and return its result.
 
 # Arguments
-- `ei::Multivector` : A GAType.
+- `ei::Multivector`
 
 # Return
 The involution of ei.
@@ -283,8 +286,8 @@ end
 Function that computes the left contraction of two multivectors and return its result.
 
 # Arguments
-- `ei::GAType` : A GAType.
-- `ej::GAType` : A GAType.
+- `ei::GAType`
+- `ej::GAType`
 
 # Return
 The result GAType.
@@ -314,8 +317,8 @@ end
 Function that computes the right contraction of two multivectors and return its result.
 
 # Arguments
-- `ei::GAType` : A GAType.
-- `ej::GAType` : A GAType.
+- `ei::GAType`
+- `ej::GAType`
 
 # Return
 The result GAType.
@@ -342,12 +345,11 @@ end
 """
     grade_selection(ei::GAType, k::Number)::GAType
 
-Function that retrieves the k grade part of a GAType.
-Duplicated, since grade_projection does the same, but 
-a new algorithm and more generalized.
+Function that retrieves the k grade part of a GAType. Duplicated, since grade_projection 
+does the same, but a new algorithm and more generalized.
 
 # Arguments
-- `ei::Multivector` : A GAType.
+- `ei::Multivector`
 - `k::Number` : The selected grade.
 
 # Return
@@ -367,11 +369,11 @@ end
 """
     invert(ei::GAType)::GAType
 
-Function that computes the inverse of a multivector (mostly versors and blades supported!!!!!) and return its result.
-May throw an error if not inversible
+Function that computes the inverse of a multivector (mostly versors and blades supported!) and return its result.
+May throw an error if not invertible.
 
 # Arguments
-- `ei::GAType` : A GAType.
+- `ei::GAType`
 
 # Return
 The inverse of ei.
@@ -392,10 +394,11 @@ end
     dual(ei::GAType)::GAType
 
 Function that computes the dual of a multivector and return its result.
-Just be careful with r>1.
+Just be careful with parameter r > 0. It uses Polarity algorithm for
+invertible algebras and hodge dual for degenerated algebras.
 
 # Arguments
-- `ei::Multivector` : A GAType.
+- `ei::Multivector`
 
 # Return
 The dual of ei.
@@ -430,10 +433,11 @@ end
     undual(ei::GAType)::GAType
 
 Function that computes the undual of a multivector and return its result.
-Just be careful with r>1.
+Just be careful with r > 0. It uses Polarity algorithm for invertible 
+algebras and hodge dual for degenerated algebras.
 
 # Arguments
-- `ei::Multivector` : A GAType.
+- `ei::Multivector`
 
 # Return
 The undual of ei.
@@ -469,8 +473,8 @@ end
 Function that computes the regressive product of two multivectors and return its result.
 
 # Arguments
-- `ei::GAType` : A GAType.
-- `ej::GAType` : A GAType.
+- `ei::GAType`
+- `ej::GAType`
 
 # Return
 The result GAType.
@@ -497,7 +501,10 @@ end
 Function that checks where a GAType is a Scalar or not.
 
 # Arguments
-- `ei::GAType` : A GAType.
+- `ei::GAType`
+
+# Return
+True if it's a Scalar, False otherwise.
 
 """
 function isScalar(ei::GAType)::Bool
@@ -511,7 +518,10 @@ end
 Function that checks where a GAType is a Blade or not.
 
 # Arguments
-- `ei::GAType` : A GAType.
+- `ei::GAType`
+
+# Return
+True if it's a Scalar, False otherwise.
 
 """
 function isBlade(ei::GAType)::Bool
@@ -519,15 +529,15 @@ function isBlade(ei::GAType)::Bool
     return length(ei) == 1
 end
 
-# TODO generic exp whe A² is not a scalar
+# TODO generic exp when A² is not a scalar
 """
     exp_ga(ei::GAType)::GAType
 
 Function that computes the exponential of elements that squares to a scalar.
-A more generic function was not yet implemented
+A more generic function was not yet implemented.
 
 # Arguments
-- `ei::GAType` : A GAType.
+- `ei::GAType`
 
 # Return
 The result GAType.

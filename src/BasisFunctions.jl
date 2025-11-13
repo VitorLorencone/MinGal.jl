@@ -1,13 +1,14 @@
 include("MainObjects.jl")
 
 """
-    grade(bl::Blade)::Integer
+    grade(bl::Blade)::Integer ||
     grade(mv::Multivector)::Integer
 
 Function that returns the grade of the Blade or multivector.
 
 # Arguments
 - `bl::Blade`
+||
 - `mv::Multivector`
 
 # Return
@@ -34,9 +35,11 @@ Function that returns the grade Projection between a Blade and an Integer. In th
 multivector form, it requires that it has only one blade.
 
 # Arguments
-- `bl::Blade` : A Blade.
-- `k::Integer` : An integer to the Grade Projection
-- `mv::Blade` : A Multivector.
+- `bl::Blade`
+- `k::Integer` : The grade for projection
+||
+- `mv::Blade`
+- `k::Integer` : The grade for projection
 
 # Return
 The result Blade. It might be the 1D blade "1"
@@ -66,8 +69,8 @@ end
 Function that returns the Scalar Product between two basis blades.
 
 # Arguments
-- `ei::Blade` : A Blade.
-- `ej::Blade` : A Blade.
+- `ei::Blade`
+- `ej::Blade`
 
 # Return
 The result Integer.
@@ -106,10 +109,11 @@ The index k follows the bit order basis.The ei value represents the
 blade that you want the scalar from.
 
 # Arguments
-- `mv::GAType` : A GAType.
-- `k::Integer` : The scalar.
+- `mv::GAType` : A Blade or a Multivector.
+- `k::Integer` : Index in bit order basis
 ||
-- `ei::Blade` : A Blade.
+- `mv::GAType` : A Blade or a Multivector.
+- `ei::Blade` : Blade for Index
 
 # Return
 The scalar value.
@@ -141,8 +145,10 @@ blade that you want to change the scalar from.
 # Arguments
 - `mv::GAType`
 - `val::Number` : New Value
-- `k::Integer` : Index
+- `k::Integer` : Index in bit order basis
 ||
+- `mv::GAType`
+- `val::Number` : New Value
 - `ei::Blade` : Index
 
 # Return
@@ -170,6 +176,7 @@ Function that checks if the GAType has a blade.
 - `mv::GAType`
 - `k::Integer` : Index
 ||
+- `mv::GAType`
 - `ei::Blade` : Index
 
 # Return
@@ -212,21 +219,21 @@ function canonical_basis(al::Algebra = gb_current_algebra)::GAVector
 end
 
 """
-    chain(coeff::Vector, al::Algebra)::GAType
+    chain(coeff::Vector)::GAType
 
 Function that 'chains' the canonical basis with a vector of coefficients. It
 sums the coeff[i]*canonical[i] with the rest, good for translating matrices lines
 into a GA object.
 
 # Arguments
-- `al::Algebra`
+- `coeff::Vector`
 
 # Return
 a single GAType, the chained value
 
 """
-function chain(coeff::Vector, al::Algebra = gb_current_algebra)::GAType
-    size = min(length(coeff), al.p + al.q + al.r)
+function chain(coeff::Vector)::GAType
+    size = min(length(coeff), gb_current_algebra.p + gb_current_algebra.q + gb_current_algebra.r)
     if typeof(gb_current_algebra.max) == BigInt
         return sum([Blade(BigInt(1)<<(i-1), coeff[i]) for i in 1:size])
     else
@@ -255,7 +262,6 @@ end
 function Base.iterate(mv::GAType, state = 1)
     inds = mv.blade_array.nzind
     vals = mv.blade_array.nzval
-
     if state > length(inds)
         return nothing
     else

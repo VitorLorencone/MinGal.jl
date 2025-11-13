@@ -1,5 +1,13 @@
 include("OperatorOverloading.jl")
 
+
+"""
+    create_special_symbols()
+
+Create and add to REPL the special symbols for this Algebra, such as
+the "id" for scalar GAType grade 0 and "eI" for the pseudoscalar of the space. 
+
+"""
 function create_special_symbols()
     eval(:(id = Multivector([0], [1])))
     eval(:(export id))
@@ -37,6 +45,16 @@ function create_symbols(string_symbols::Vector{String})
     create_special_symbols()
 end
 
+"""
+    create_symbols_min(stringSymbols)
+
+Create and add to REPL the (custom or basis) symbols for this Algebra. But
+only the canonical basis blades symbols no combination between then.
+
+# Arguments
+- `string_symbols::Vector{String}` : An array with all the custom or basis symbols.
+
+"""
 function create_symbols_min(string_symbols::Vector{String})
 
     symbol_array = []
@@ -63,17 +81,18 @@ function create_symbols_min(string_symbols::Vector{String})
 end
 
 """
-    Algebra(p, q, r, symbols)::Algebra
+    Algebra(p, [q], [r], [symbols], [type])::Algebra
 
 Main function for creating your Algebra and adding its basis blades to REPL.
 Constructor Function of an algebraic object with parameters p, q, r, R^{p, q, r}, and its multivector space.
-If not defined, the last parameter is automatically calculated as canonical.
+If not defined, the last two parameters are automatically calculated as canonical.
 
 # Arguments
-- `p::Int` : The first parameter of the definition
-- `q::Int` : The second parameter of the definition
-- `r::Int` : The third parameter of the definition
-- `symbols::Vector{String}` : An Array with string vectors to work with
+- `p::Int` : Represents the ammount of positive dimensions
+- `q::Int` : Represents the ammount of negative dimensions
+- `r::Int` : Represents the ammount of zero dimensions
+- `symbols::Vector{String}` : Array of primary symbols for the Algebra
+- `type::String` : String for manually selecting "full", "min" or "special" Algebras
 
 # Return
 Returns the created Algebra object.
