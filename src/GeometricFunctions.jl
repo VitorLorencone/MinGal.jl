@@ -395,7 +395,7 @@ end
 
 Function that computes the dual of a multivector and return its result.
 Just be careful with parameter r > 0. It uses Polarity algorithm for
-invertible algebras and hodge dual for degenerated algebras.
+invertible algebras and hodge dual for degenerate algebras.
 
 # Arguments
 - `ei::Multivector`
@@ -434,7 +434,7 @@ end
 
 Function that computes the undual of a multivector and return its result.
 Just be careful with r > 0. It uses Polarity algorithm for invertible 
-algebras and hodge dual for degenerated algebras.
+algebras and hodge dual for degenerate algebras.
 
 # Arguments
 - `ei::Multivector`
@@ -559,4 +559,68 @@ function exp_ga(ei::GAType)::GAType
     else
         error("There is no implementation of exp when element do not squares to a scalar")
     end
+end
+
+"""
+    norm(ei::GAType)::Number
+
+Function that computes the reverse norm in absolute value for a GAType on usual algebras. 
+For degenerate algebras, computes euclidian norm.
+
+# Arguments
+- `ei::GAType`
+
+# Return
+The norm of ei.
+
+"""
+function norm(ei::GAType)::Number
+    if gb_current_algebra.r == 0
+        return sqrt(abs(grade_selection(ei*revert(ei), 0)[0]))
+    else
+        sum = 0
+        for x in ei
+            sum += scalar(x) * scalar(x)
+        end
+        return sqrt(sum)
+    end
+end
+
+"""
+    reverse_norm(ei::GAType)::Number
+
+Function that computes the reverse norm of a GAType on usual algebras. In practice 
+the reverse norm is useful, especially due to its possible negative sign
+
+# Arguments
+- `ei::GAType`
+
+# Return
+The reverse norm of ei.
+
+"""
+function reverse_norm(ei::GAType)::Number
+    rev_norm = grade_selection(ei*revert(ei), 0)[0]
+    return sign(rev_norm) * sqrt(abs(rev_norm))
+end
+
+"""
+    euclidian_norm(ei::GAType)::Number
+
+Function that computes the euclidian norm of a GAType. It is also good
+for degenerate algebras.
+
+# Arguments
+- `ei::GAType`
+
+# Return
+The euclidian norm of ei.
+
+"""
+function euclidian_norm(ei::GAType)::Number
+    sum = 0
+    for x in ei
+        sum += scalar(x) * scalar(x)
+    end
+    return sqrt(sum)
 end
