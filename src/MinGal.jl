@@ -13,8 +13,9 @@ export geometric_product, inner_product, outer_product
 export bitmap, scalar, multivector_sum, multivector_sub
 export Multivector, Blade, product_by_scalar, describe
 export grade_selection, left_contraction, right_contraction
-export GAType, GAVector, GAArray, involution, invert, dual
+export GAType, GAVector, GAArray, grade_involution, invert, dual
 export undual, regressive_product, exp_ga, isScalar, isBlade
 export canonical_basis, chain, norm, reverse_norm, euclidian_norm
+export conjugate, clifford_conjugation, conjugate_norm, clifford_norm
 
 end

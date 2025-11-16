@@ -27,6 +27,39 @@ function grade(mv::Multivector)::Integer
     return grade
 end
 
+function grade_plus(bl::Blade)::Integer
+    bits = bitstring(bitmap(bl))
+    res = 0
+    for (i, bit) in enumerate(reverse(bits))
+        if bit == '1' && i > gb_current_algebra.r && i <= gb_current_algebra.r + gb_current_algebra.p
+            res += 1
+        end
+    end
+    return res
+end
+
+function grade_minus(bl::Blade)::Integer
+    bits = bitstring(bitmap(bl))
+    res = 0
+    for (i, bit) in enumerate(reverse(bits))
+        if bit == '1' && i > gb_current_algebra.p + gb_current_algebra.r
+            res += 1
+        end
+    end
+    return res
+end
+
+function grade_zero(bl::Blade)::Integer
+    bits = bitstring(bitmap(bl))
+    res = 0
+    for (i, bit) in enumerate(reverse(bits))
+        if bit == '1' && i >= 1 && i <= gb_current_algebra.r
+            res += 1
+        end
+    end
+    return res
+end
+
 """
     grade_projection(bl, k)::Blade ||
     grade_projection(mv, k)::Blade
@@ -93,7 +126,7 @@ function scalar_product(ei::GAType, ej::GAType)::Integer
         return 0
     elseif i >= 1 && j <= gb_current_algebra.r
         return 0
-    elseif i >= gb_current_algebra.r && j <= gb_current_algebra.r + gb_current_algebra.p
+    elseif i > gb_current_algebra.r && j <= gb_current_algebra.r + gb_current_algebra.p
         return 1
     else
         return -1

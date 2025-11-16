@@ -47,13 +47,13 @@ end
     @test scalar(Blade(prod_mv)) == 10.0
 end
 
-@testset "Reverse and Involution" begin
+@testset "Reverse and Grade Involution" begin
     e1 = Blade(1,1.0)
     e2 = Blade(3,1.0)
     mv = Multivector([1,3],[1.0,2.0])
 
     rev_mv = revert(mv)
-    inv_mv = involution(mv)
+    inv_mv = grade_involution(mv)
 
     @test isa(rev_mv, Multivector)
     @test isa(inv_mv, Multivector)

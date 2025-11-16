@@ -139,7 +139,7 @@ function create_algebra(p::Int, q::Int = 0, r::Int = 0, symbols = nothing)::Alge
 
     # Zero first for convention
     metric::Array{Int8} = vcat(fill(0, r), fill(1, p), fill(-1, q))
-    max::Int = 1<<(p+q+r) # Fine to be Int
+    max::Int = 1<<(p+q+r) # Fine to be Int and not Int64
 
     global gb_current_algebra = AlgebraFull(p, q, r, symbols, basis, basis_bit_order, metric, max)
     return gb_current_algebra

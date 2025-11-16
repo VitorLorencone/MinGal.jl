@@ -260,18 +260,61 @@ function revert(ei::GAType)::GAType
 end
 
 """
-    involution(ei::GAType)::GAType
+    conjugate(ei::GAType)::GAType
 
-Function that computes the involuction of a multivector and return its result.
+Function that computes the conjugate of a multivector and return its result.
 
 # Arguments
 - `ei::Multivector`
 
 # Return
-The involution of ei.
+The conjugate of ei.
 
 """
-function involution(ei::GAType)::GAType
+function conjugate(ei::GAType)::GAType
+    result = Multivector([0],[0])
+    for x in ei
+        k = grade(x)
+        r = grade_minus(x)
+        result += (-1)^r * (-1)^(k*(k-1)/2) * x
+    end
+    return result
+end
+
+"""
+    clifford_conjugation(ei::GAType)::GAType
+
+Function that computes the Clifford Conjugation of a multivector and return its result.
+
+# Arguments
+- `ei::Multivector`
+
+# Return
+The Clifford Conjugate of ei.
+
+"""
+function clifford_conjugation(ei::GAType)::GAType
+    result = Multivector([0],[0])
+    for x in ei
+        k = grade(x)
+        result += (-1)^(k*(k+1)/2) * x
+    end
+    return result
+end
+
+"""
+    grade_involution(ei::GAType)::GAType
+
+Function that computes the grade involuction of a multivector and return its result.
+
+# Arguments
+- `ei::Multivector`
+
+# Return
+The grade involution of ei.
+
+"""
+function grade_involution(ei::GAType)::GAType
     result = Multivector([0],[0])
     for x in ei
         k = grade(x)
@@ -564,7 +607,7 @@ end
 """
     norm(ei::GAType)::Number
 
-Function that computes the reverse norm in absolute value for a GAType on usual algebras. 
+Function that computes the reverse norm in absolute value (conjugate norm) for a GAType on usual algebras. 
 For degenerate algebras, computes euclidian norm.
 
 # Arguments
@@ -576,13 +619,9 @@ The norm of ei.
 """
 function norm(ei::GAType)::Number
     if gb_current_algebra.r == 0
-        return sqrt(abs(grade_selection(ei*revert(ei), 0)[0]))
+        return conjugate_norm(ei)
     else
-        sum = 0
-        for x in ei
-            sum += scalar(x) * scalar(x)
-        end
-        return sqrt(sum)
+        return euclidian_norm(ei)
     end
 end
 
@@ -600,15 +639,15 @@ The reverse norm of ei.
 
 """
 function reverse_norm(ei::GAType)::Number
-    rev_norm = grade_selection(ei*revert(ei), 0)[0]
+    rev_norm = (ei*revert(ei))[0]
     return sign(rev_norm) * sqrt(abs(rev_norm))
 end
 
 """
     euclidian_norm(ei::GAType)::Number
 
-Function that computes the euclidian norm of a GAType. It is also good
-for degenerate algebras.
+Function that computes the euclidian coefficients norm of a GAType. It is also good
+for degenerate algebras then the metric might be ignored.
 
 # Arguments
 - `ei::GAType`
@@ -623,4 +662,37 @@ function euclidian_norm(ei::GAType)::Number
         sum += scalar(x) * scalar(x)
     end
     return sqrt(sum)
+end
+
+"""
+    conjugate_norm(ei::GAType)::Number
+
+Function that computes the conjugate norm of a GAType. Also another possible norm
+for degenerate algebras.
+
+# Arguments
+- `ei::GAType`
+
+# Return
+The conjugate norm of ei.
+
+"""
+function conjugate_norm(ei::GAType)::Number
+    sqrt(abs((ei*conjugate(ei))[0]))
+end
+
+"""
+    clifford_norm(ei::GAType)::Number
+
+Function that computes the clifford norm of a GAType.
+
+# Arguments
+- `ei::GAType`
+
+# Return
+The clifford norm of ei.
+
+"""
+function clifford_norm(ei::GAType)::Number
+    sqrt(abs((ei*clifford_conjugation(ei))[0]))
 end
