@@ -9,7 +9,7 @@ Function that writes the canonical vector space symbols, given the parameters p,
 # Arguments
 - `p::Int` : Represents the ammount of positive dimensions
 - `q::Int` : Represents the ammount of negative dimensions
-- `r::Int` : Represents the ammount of zero dimensions
+- `r::Int` : Represents the ammount of null dimensions
 
 # Return
 Return an array of strings with all the necessary elements for this space.

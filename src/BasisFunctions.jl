@@ -49,7 +49,7 @@ function grade_minus(bl::Blade)::Integer
     return res
 end
 
-function grade_zero(bl::Blade)::Integer
+function grade_null(bl::Blade)::Integer
     bits = bitstring(bitmap(bl))
     res = 0
     for (i, bit) in enumerate(reverse(bits))

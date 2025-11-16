@@ -10,7 +10,7 @@ A structure to define an algebra to be worked with its respective dimensions and
 # Fields
 - `p::Int` : Represents the ammount of positive dimensions
 - `q::Int` : Represents the ammount of negative dimensions
-- `r::Int` : Represents the ammount of zero dimensions
+- `r::Int` : Represents the ammount of null dimensions
 - `symbols::Vector{String}` : Array of primary symbols for the Algebra
 - `basis::Vector{String}` : Array of all symbols for the Algebra, normal order
 - `basis_bit_order::Vector{String}` : Array of symbols for the Algebra, bit order
@@ -37,7 +37,7 @@ A structure to define an algebra to be worked with its respective dimensions and
 # Fields
 - `p::Int` : Represents the ammount of positive dimensions
 - `q::Int` : Represents the ammount of negative dimensions
-- `r::Int` : Represents the ammount of zero dimensions
+- `r::Int` : Represents the ammount of null dimensions
 - `symbols::Vector{String}` : Array of primary symbols for the Algebra
 - `metric::Vector{Int8}` : Another way of representing the algebra signature
 - `max::Int` : max number of Algebra elements, the same as 2^(p+q+r)
@@ -108,7 +108,7 @@ the symbols for the algebra are automatically calculated as canonical.
 # Arguments
 - `p::Int` : Represents the ammount of positive dimensions
 - `q::Int` : Represents the ammount of negative dimensions
-- `r::Int` : Represents the ammount of zero dimensions
+- `r::Int` : Represents the ammount of null dimensions
 - `symbols::Vector{String}` : Array of primary symbols for the Algebra
 
 # Return
@@ -154,7 +154,7 @@ symbos in the "min" algebra representation.
 # Arguments
 - `p::Int` : Represents the ammount of positive dimensions
 - `q::Int` : Represents the ammount of negative dimensions
-- `r::Int` : Represents the ammount of zero dimensions
+- `r::Int` : Represents the ammount of null dimensions
 
 # Return
 Returns the created Algebra object.

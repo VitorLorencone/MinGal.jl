@@ -90,7 +90,7 @@ If not defined, the last two parameters are automatically calculated as canonica
 # Arguments
 - `p::Int` : Represents the ammount of positive dimensions
 - `q::Int` : Represents the ammount of negative dimensions
-- `r::Int` : Represents the ammount of zero dimensions
+- `r::Int` : Represents the ammount of null dimensions
 - `symbols::Vector{String}` : Array of primary symbols for the Algebra
 - `type::String` : String for manually selecting "full", "min" or "special" Algebras
 
