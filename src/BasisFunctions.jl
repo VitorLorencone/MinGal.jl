@@ -27,6 +27,19 @@ function grade(mv::Multivector)::Integer
     return grade
 end
 
+"""
+    grade_plus(bl::Blade)::Integer
+
+Function that returns the numbers of basis vectors in a basis blade that
+square to +1.
+
+# Arguments
+- `bl::Blade`
+
+# Return
+An integer, the grade+ of the blade or multivector.
+
+"""
 function grade_plus(bl::Blade)::Integer
     bits = bitstring(bitmap(bl))
     res = 0
@@ -38,6 +51,19 @@ function grade_plus(bl::Blade)::Integer
     return res
 end
 
+"""
+    grade_minus(bl::Blade)::Integer
+
+Function that returns the numbers of basis vectors in a basis blade that
+square to -1.
+
+# Arguments
+- `bl::Blade`
+
+# Return
+An integer, the grade- of the blade or multivector.
+
+"""
 function grade_minus(bl::Blade)::Integer
     bits = bitstring(bitmap(bl))
     res = 0
@@ -49,6 +75,19 @@ function grade_minus(bl::Blade)::Integer
     return res
 end
 
+"""
+    grade_null(bl::Blade)::Integer
+
+Function that returns the numbers of basis vectors in a basis blade that
+square to 0.
+
+# Arguments
+- `bl::Blade`
+
+# Return
+An integer, the grade0 of the blade or multivector.
+
+"""
 function grade_null(bl::Blade)::Integer
     bits = bitstring(bitmap(bl))
     res = 0
@@ -97,7 +136,7 @@ function grade_projection(mv::Multivector, k::Integer)::Multivector
 end
 
 """
-    scalar_product(ei, ej)::Integer
+    scalar_product_basis(ei, ej)::Integer
 
 Function that returns the Scalar Product between two basis blades.
 
@@ -109,7 +148,7 @@ Function that returns the Scalar Product between two basis blades.
 The result Integer.
 
 """
-function scalar_product(ei::GAType, ej::GAType)::Integer
+function scalar_product_basis(ei::GAType, ej::GAType)::Integer
     ei = Blade(ei) # Checks if it is a Blade
     ej = Blade(ej) # Checks if it is a Blade
 
@@ -124,9 +163,9 @@ function scalar_product(ei::GAType, ej::GAType)::Integer
     
     if i != j
         return 0
-    elseif i >= 1 && j <= gb_current_algebra.r
+    elseif i >= 0 && j < gb_current_algebra.r
         return 0
-    elseif i > gb_current_algebra.r && j <= gb_current_algebra.r + gb_current_algebra.p
+    elseif i >= gb_current_algebra.r && j < gb_current_algebra.r + gb_current_algebra.p
         return 1
     else
         return -1

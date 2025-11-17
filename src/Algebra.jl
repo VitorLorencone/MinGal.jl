@@ -25,6 +25,7 @@ struct AlgebraFull{T <: Integer} <: Algebra
     symbols::Vector{String}
     basis::Vector{String}
     basis_bit_order::Vector{String}
+    blades::Dict{Symbol, Any}
     metric::Vector{Int8}
     max::T
 end
@@ -48,6 +49,7 @@ struct AlgebraMin{T <: Integer} <: Algebra
     q::Int
     r::Int
     symbols::Vector{String}
+    blades::Dict{Symbol, Any}
     metric::Vector{Int8}
     max::T
 end
@@ -140,8 +142,9 @@ function create_algebra(p::Int, q::Int = 0, r::Int = 0, symbols = nothing)::Alge
     # Zero first for convention
     metric::Array{Int8} = vcat(fill(0, r), fill(1, p), fill(-1, q))
     max::Int = 1<<(p+q+r) # Fine to be Int and not Int64
+    blades = Dict{Symbol, Any}()
 
-    global gb_current_algebra = AlgebraFull(p, q, r, symbols, basis, basis_bit_order, metric, max)
+    global gb_current_algebra = AlgebraFull(p, q, r, symbols, basis, basis_bit_order, blades, metric, max)
     return gb_current_algebra
 end
 
@@ -184,8 +187,17 @@ function create_algebra_min(p, q = 0, r = 0)::Algebra
         max = Int64(1)<<(p+q+r)
     end
 
-    global gb_current_algebra = AlgebraMin{typeof(max)}(p, q, r, symbols, metric, max)
+    blades = Dict{Symbol, Any}()
+
+    global gb_current_algebra = AlgebraMin{typeof(max)}(p, q, r, symbols, blades, metric, max)
     return gb_current_algebra
+end
+
+function Base.getproperty(ga::Algebra, name::Symbol)
+    if name in fieldnames(typeof(ga))
+        return getfield(ga, name)
+    end
+    return ga.blades[name]
 end
 
 # Global Variable for exporting the current Algebra

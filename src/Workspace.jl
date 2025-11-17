@@ -1,6 +1,5 @@
 include("OperatorOverloading.jl")
 
-
 """
     create_special_symbols()
 
@@ -13,6 +12,8 @@ function create_special_symbols()
     eval(:(export id))
     eval(:(eI = Multivector([gb_current_algebra.max-1], [1])))
     eval(:(export eI))
+    gb_current_algebra.blades[:id] = Multivector([0], [1])
+    gb_current_algebra.blades[:eI] = Multivector([gb_current_algebra.max-1], [1])
 end
 
 """
@@ -38,6 +39,7 @@ function create_symbols(string_symbols::Vector{String})
     for k in eachindex(symbol_array)
         symbol = symbol_array[k]
         mv = Multivector([k], [1])
+        gb_current_algebra.blades[symbol] = mv
         eval(:($symbol = $mv))
         eval(:(export $symbol))
     end
@@ -69,9 +71,11 @@ function create_symbols_min(string_symbols::Vector{String})
         if typeof(gb_current_algebra.max) == BigInt
             mv = Multivector([BigInt(1)<<(k-1)], [1])
             eval(:($symbol = $mv))
+            gb_current_algebra.blades[symbol] = mv
         else
             mv = Multivector([1<<(k-1)], [1])
             eval(:($symbol = $mv))
+            gb_current_algebra.blades[symbol] = mv
         end
         
         eval(:(export $symbol))

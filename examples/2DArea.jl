@@ -2,7 +2,9 @@ using MinGal
 
 Algebra(2)
 
-point = (x, y) -> return x*e1 + y*e2
+function point(x, y)
+    return x*e1 + y*e2
+end
 
 # Calculates the area of a polygon by an ordered set of points in geometric-algebra terms by triangulating 
 # the polygon with a fixed reference point and summing the areas of the triangles.

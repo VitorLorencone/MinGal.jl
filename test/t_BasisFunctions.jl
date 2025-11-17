@@ -33,12 +33,8 @@ end
     bl2 = Blade(2, 1.0)
     bl3 = Blade(1, 2.0)
 
-    @test MinGal.scalar_product(bl1, bl2) == 0
-
-    @test MinGal.scalar_product(bl1, bl3) == 1
-
-    bl_wrong = Blade(3, 1.0)
-    @test_throws DomainError MinGal.scalar_product(bl_wrong, bl1)
+    @test scalar_product(bl1, bl2) == 0
+    @test scalar_product(bl1, bl3) == 2
 end
 
 @testset "Scalar Access Tests" begin

@@ -608,7 +608,7 @@ end
     norm(ei::GAType)::Number
 
 Function that computes the reverse norm in absolute value (conjugate norm) for a GAType on usual algebras. 
-For degenerate algebras, computes euclidian norm.
+For degenerate algebras, computes euclidean norm.
 
 # Arguments
 - `ei::GAType`
@@ -621,7 +621,7 @@ function norm(ei::GAType)::Number
     if gb_current_algebra.r == 0
         return conjugate_norm(ei)
     else
-        return euclidian_norm(ei)
+        return euclidean_norm(ei)
     end
 end
 
@@ -644,19 +644,19 @@ function reverse_norm(ei::GAType)::Number
 end
 
 """
-    euclidian_norm(ei::GAType)::Number
+    euclidean_norm(ei::GAType)::Number
 
-Function that computes the euclidian coefficients norm of a GAType. It is also good
+Function that computes the euclidean coefficients norm of a GAType. It is also good
 for degenerate algebras then the metric might be ignored.
 
 # Arguments
 - `ei::GAType`
 
 # Return
-The euclidian norm of ei.
+The euclidean norm of ei.
 
 """
-function euclidian_norm(ei::GAType)::Number
+function euclidean_norm(ei::GAType)::Number
     sum = 0
     for x in ei
         sum += scalar(x) * scalar(x)
@@ -695,4 +695,39 @@ The clifford norm of ei.
 """
 function clifford_norm(ei::GAType)::Number
     sqrt(abs((ei*clifford_conjugation(ei))[0]))
+end
+
+"""
+    scalar_product(ei, ej)::Number
+
+Function that returns the Scalar Product between two GAType.
+
+# Arguments
+- `ei::GAType`
+- `ej::GAType`
+
+# Return
+The result prodcut.
+
+"""
+function scalar_product(ei::GAType, ej::GAType)::Number
+    return (ei*ej)[0]
+end
+
+
+"""
+    euclidean_scalar_product(ei, ej)::Number
+
+Function that returns the Euclidean Scalar Product between two GAType.
+
+# Arguments
+- `ei::GAType`
+- `ej::GAType`
+
+# Return
+The result prodcut.
+
+"""
+function euclidean_scalar_product(ei::GAType, ej::GAType)::Number
+    return (ei*conjugate(ej))[0]
 end
