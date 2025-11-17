@@ -14,6 +14,7 @@ A structure to define an algebra to be worked with its respective dimensions and
 - `symbols::Vector{String}` : Array of primary symbols for the Algebra
 - `basis::Vector{String}` : Array of all symbols for the Algebra, normal order
 - `basis_bit_order::Vector{String}` : Array of symbols for the Algebra, bit order
+- `blades::Dict{Symbol, Any}` : Array of all multivectors generated for this algebra
 - `metric::Vector{Int8}` : Another way of representing the algebra signature
 - `max::Integer` : max number of Algebra elements, the same as 2^(p+q+r)
 
@@ -40,6 +41,7 @@ A structure to define an algebra to be worked with its respective dimensions and
 - `q::Int` : Represents the ammount of negative dimensions
 - `r::Int` : Represents the ammount of null dimensions
 - `symbols::Vector{String}` : Array of primary symbols for the Algebra
+- `blades::Dict{Symbol, Any}` : Array of all multivectors generated for this algebra
 - `metric::Vector{Int8}` : Another way of representing the algebra signature
 - `max::Int` : max number of Algebra elements, the same as 2^(p+q+r)
 
@@ -68,11 +70,8 @@ function describe(al::AlgebraFull)
     println("- p: $(al.p)")
     println("- q: $(al.q)")
     println("- r: $(al.r)")
-    println("- symbols: $(al.symbols)")
-    println("- basis: $(al.basis)")
     println("- basis_bit_order: $(al.basis_bit_order)")
     println("- metric: $(al.metric)")
-    print("- max: $(al.max)")
 end
 
 function describe(al::AlgebraMin)
@@ -82,7 +81,6 @@ function describe(al::AlgebraMin)
     println("- r: $(al.r)")
     println("- symbols: $(al.symbols)")
     println("- metric: $(al.metric)")
-    print("- max: $(al.max)")
 end
 
 function Base.show(io::IO, al::AlgebraFull)
@@ -91,7 +89,6 @@ function Base.show(io::IO, al::AlgebraFull)
     println("- q: $(al.q)")
     println("- r: $(al.r)")
     println("- basis_bit_order: $(al.basis_bit_order)")
-    print("- max: $(al.max)")
 end
 
 function Base.show(io::IO, al::AlgebraMin)

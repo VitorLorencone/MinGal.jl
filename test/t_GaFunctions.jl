@@ -93,8 +93,8 @@ end
     e1 = Blade(1,1.0)
     mv = Multivector([0],[2.0])
 
-    @test isScalar(mv) == true
-    @test isBlade(e1) == true
+    @test is_scalar(mv) == true
+    @test is_blade(e1) == true
 end
 
 @testset "Exponential of GAType" begin

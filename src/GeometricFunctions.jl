@@ -539,7 +539,7 @@ function regressive_product(ei::GAType, ej::GAType)::GAType
 end
 
 """
-    isScalar(ei::GAType)::Bool
+    is_scalar(ei::GAType)::Bool
 
 Function that checks where a GAType is a Scalar or not.
 
@@ -550,13 +550,13 @@ Function that checks where a GAType is a Scalar or not.
 True if it's a Scalar, False otherwise.
 
 """
-function isScalar(ei::GAType)::Bool
+function is_scalar(ei::GAType)::Bool
     dropzeros!(ei.blade_array)
     return ei.blade_array.nzind == [1] || length(ei) == 0
 end
 
 """
-    isBlade(ei::GAType)::Bool
+    is_blade(ei::GAType)::Bool
 
 Function that checks where a GAType is a Blade or not.
 
@@ -564,10 +564,10 @@ Function that checks where a GAType is a Blade or not.
 - `ei::GAType`
 
 # Return
-True if it's a Scalar, False otherwise.
+True if it's a Blade, False otherwise.
 
 """
-function isBlade(ei::GAType)::Bool
+function is_blade(ei::GAType)::Bool
     dropzeros!(ei.blade_array)
     return length(ei) == 1
 end
@@ -588,9 +588,9 @@ The result GAType.
 """
 function exp_ga(ei::GAType)::GAType
     A2 = ei*ei
-    if isScalar(A2) && A2[0] == 0
+    if is_scalar(A2) && A2[0] == 0
         return ei+1
-    elseif isScalar(A2)
+    elseif is_scalar(A2)
         k = A2[0]
         if k < 0
             a = sqrt(-k)
@@ -647,7 +647,7 @@ end
     euclidean_norm(ei::GAType)::Number
 
 Function that computes the euclidean coefficients norm of a GAType. It is also good
-for degenerate algebras then the metric might be ignored.
+for degenerate algebras because the metric is mostly ignored.
 
 # Arguments
 - `ei::GAType`
@@ -678,7 +678,7 @@ The conjugate norm of ei.
 
 """
 function conjugate_norm(ei::GAType)::Number
-    sqrt(abs((ei*conjugate(ei))[0]))
+    sqrt((ei*conjugate(ei))[0])
 end
 
 """
@@ -707,7 +707,7 @@ Function that returns the Scalar Product between two GAType.
 - `ej::GAType`
 
 # Return
-The result prodcut.
+The result product.
 
 """
 function scalar_product(ei::GAType, ej::GAType)::Number
@@ -725,7 +725,7 @@ Function that returns the Euclidean Scalar Product between two GAType.
 - `ej::GAType`
 
 # Return
-The result prodcut.
+The result product
 
 """
 function euclidean_scalar_product(ei::GAType, ej::GAType)::Number
