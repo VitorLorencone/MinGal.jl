@@ -1,17 +1,35 @@
 include("OperatorOverloading.jl")
 
 """
+    change_algebra(al::Algebra)
+
+Change with safety the algebra on use. Does not recreate the symbols.
+
+# Arguments
+- `al::Algebra`
+
+"""
+function change_algebra(al::Algebra)
+    global gb_current_algebra = al
+end
+
+"""
     create_special_symbols()
 
 Create and add to REPL the special symbols for this Algebra, such as
 the "id" for scalar GAType grade 0 and "eI" for the pseudoscalar of the space. 
 
 """
-function create_special_symbols()
+function create_special_symbols(al::Algebra)
+
     eval(:(id = Multivector([0], [1])))
     eval(:(export id))
     eval(:(eI = Multivector([gb_current_algebra.max-1], [1])))
     eval(:(export eI))
+    
+    al.blades[:id] = Multivector([0], [1], al)
+    al.blades[:eI] = Multivector([al.max-1], [1], al)
+    
     gb_current_algebra.blades[:id] = Multivector([0], [1])
     gb_current_algebra.blades[:eI] = Multivector([gb_current_algebra.max-1], [1])
 end
@@ -25,7 +43,7 @@ Create and add to REPL all the (custom or basis) symbols for this Algebra.
 - `string_symbols::Vector{String}` : An array with all the custom or basis symbols.
 
 """
-function create_symbols(string_symbols::Vector{String})
+function create_symbols(string_symbols::Vector{String}, al::Algebra)
 
     symbol_array = []
 
@@ -39,12 +57,12 @@ function create_symbols(string_symbols::Vector{String})
     for k in eachindex(symbol_array)
         symbol = symbol_array[k]
         mv = Multivector([k], [1])
-        gb_current_algebra.blades[symbol] = mv
+        al.blades[symbol] = Multivector([k], [1], al)
         eval(:($symbol = $mv))
         eval(:(export $symbol))
     end
 
-    create_special_symbols()
+    create_special_symbols(al)
 end
 
 """
@@ -57,7 +75,7 @@ only the canonical basis blades symbols no combination between then.
 - `string_symbols::Vector{String}` : An array with all the custom or basis symbols.
 
 """
-function create_symbols_min(string_symbols::Vector{String})
+function create_symbols_min(string_symbols::Vector{String}, al::Algebra)
 
     symbol_array = []
 
@@ -68,20 +86,20 @@ function create_symbols_min(string_symbols::Vector{String})
     for k in eachindex(symbol_array)
         symbol = symbol_array[k]
 
-        if typeof(gb_current_algebra.max) == BigInt
+        if typeof(al.max) == BigInt
             mv = Multivector([BigInt(1)<<(k-1)], [1])
             eval(:($symbol = $mv))
-            gb_current_algebra.blades[symbol] = mv
+            al.blades[symbol] = Multivector([BigInt(1)<<(k-1)], [1], al)
         else
             mv = Multivector([1<<(k-1)], [1])
             eval(:($symbol = $mv))
-            gb_current_algebra.blades[symbol] = mv
+            al.blades[symbol] = Multivector([1<<(k-1)], [1], al)
         end
         
         eval(:(export $symbol))
     end
 
-    create_special_symbols()
+    create_special_symbols(al)
 end
 
 """
@@ -107,16 +125,16 @@ function Algebra(p = 0, q = 0, r = 0, symbols = nothing, type = nothing)::Algebr
     if type !== nothing
 
         if type == "full"
-            Al = create_algebra(p, q, r, symbols)
-            create_symbols(Al.basis_bit_order)
+            Al = deepcopy(create_algebra(p, q, r, symbols))
+            create_symbols(Al.basis_bit_order, Al)
 
         elseif type == "min"
-            Al = create_algebra_min(p, q, r)
-            create_symbols_min(Al.symbols)
+            Al = deepcopy(create_algebra_min(p, q, r))
+            create_symbols_min(Al.symbols, Al)
 
         elseif type == "special"
-            Al = create_algebra_min(p, q, r)
-            create_special_symbols()
+            Al = deepcopy(create_algebra_min(p, q, r))
+            create_special_symbols(Al)
 
         else
             throw(Error(type, "Type does not exist."))
@@ -124,17 +142,17 @@ function Algebra(p = 0, q = 0, r = 0, symbols = nothing, type = nothing)::Algebr
         
     else
         if p+q+r >= 15
-            Al = create_algebra_min(p, q, r)
+            Al = deepcopy(create_algebra_min(p, q, r))
             
             if(p+q+r <= 50000)
-                create_symbols_min(Al.symbols)
+                create_symbols_min(Al.symbols, Al)
             else
-                create_special_symbols()
+                create_special_symbols(Al)
             end
 
         else
-            Al = create_algebra(p, q, r, symbols)
-            create_symbols(Al.basis_bit_order)
+            Al = deepcopy(create_algebra(p, q, r, symbols))
+            create_symbols(Al.basis_bit_order, Al)
         end
     end
 

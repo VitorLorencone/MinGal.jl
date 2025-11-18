@@ -44,7 +44,7 @@ function grade_plus(bl::Blade)::Integer
     bits = bitstring(bitmap(bl))
     res = 0
     for (i, bit) in enumerate(reverse(bits))
-        if bit == '1' && i > gb_current_algebra.r && i <= gb_current_algebra.r + gb_current_algebra.p
+        if bit == '1' && i > bl.algebra.r && i <= bl.algebra.r + bl.algebra.p
             res += 1
         end
     end
@@ -68,7 +68,7 @@ function grade_minus(bl::Blade)::Integer
     bits = bitstring(bitmap(bl))
     res = 0
     for (i, bit) in enumerate(reverse(bits))
-        if bit == '1' && i > gb_current_algebra.p + gb_current_algebra.r
+        if bit == '1' && i > bl.algebra.p + bl.algebra.r
             res += 1
         end
     end
@@ -92,7 +92,7 @@ function grade_null(bl::Blade)::Integer
     bits = bitstring(bitmap(bl))
     res = 0
     for (i, bit) in enumerate(reverse(bits))
-        if bit == '1' && i >= 1 && i <= gb_current_algebra.r
+        if bit == '1' && i >= 1 && i <= bl.algebra.r
             res += 1
         end
     end
@@ -131,7 +131,7 @@ function grade_projection(mv::Multivector, k::Integer)::Multivector
     if grade(bl) == k
         return Multivector(bl)
     else
-        return Multivector([0],[0])
+        return Multivector([0],[0],mv.algebra)
     end
 end
 
@@ -163,9 +163,9 @@ function scalar_product_basis(ei::GAType, ej::GAType)::Integer
     
     if i != j
         return 0
-    elseif i >= 0 && j < gb_current_algebra.r
+    elseif i >= 0 && j < ei.algebra.r
         return 0
-    elseif i >= gb_current_algebra.r && j < gb_current_algebra.r + gb_current_algebra.p
+    elseif i >= ei.algebra.r && j < ei.algebra.r + ei.algebra.p
         return 1
     else
         return -1
@@ -282,16 +282,16 @@ A Vector (GAVector) with only the canonical basis blades
 
 """
 function canonical_basis(al::Algebra = gb_current_algebra)::GAVector
-    if typeof(gb_current_algebra.max) == BigInt
-        return [Blade(BigInt(1)<<(i-1), 1) for i in 1:(al.p + al.q + al.r)]
+    if typeof(al.max) == BigInt
+        return [Blade(BigInt(1)<<(i-1), 1, al) for i in 1:(al.p + al.q + al.r)]
     else
-        return [Blade(1<<(i-1), 1) for i in 1:(al.p + al.q + al.r)]
+        return [Blade(1<<(i-1), 1, al) for i in 1:(al.p + al.q + al.r)]
     end
     
 end
 
 """
-    chain(coeff::Vector)::GAType
+    chain(coeff::Vector, al::Algebra)::GAType
 
 Function that 'chains' the canonical basis with a vector of coefficients. It
 sums the coeff[i]*canonical[i] with the rest, good for translating matrices lines
@@ -299,17 +299,18 @@ into a GA object.
 
 # Arguments
 - `coeff::Vector`
+- `al::Algebra`
 
 # Return
 a single GAType, the chained value
 
 """
-function chain(coeff::Vector)::GAType
-    size = min(length(coeff), gb_current_algebra.p + gb_current_algebra.q + gb_current_algebra.r)
-    if typeof(gb_current_algebra.max) == BigInt
-        return sum([Blade(BigInt(1)<<(i-1), coeff[i]) for i in 1:size])
+function chain(coeff::Vector, al::Algebra = gb_current_algebra)::GAType
+    size = min(length(coeff), al.p + al.q + al.r)
+    if typeof(al.max) == BigInt
+        return sum([Blade(BigInt(1)<<(i-1), coeff[i], al) for i in 1:size])
     else
-        return sum([Blade(1<<(i-1), coeff[i]) for i in 1:size])
+        return sum([Blade(1<<(i-1), coeff[i], al) for i in 1:size])
     end
 end
 
@@ -337,7 +338,7 @@ function Base.iterate(mv::GAType, state = 1)
     if state > length(inds)
         return nothing
     else
-        return (Blade(inds[state]-1, vals[state]), state + 1)
+        return (Blade(inds[state]-1, vals[state], mv.algebra), state + 1)
     end
 end
 
