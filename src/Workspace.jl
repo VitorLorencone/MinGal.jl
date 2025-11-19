@@ -1,6 +1,19 @@
 include("OperatorOverloading.jl")
 
 """
+    change_algebra(al::Algebra)
+
+Change with safety the algebra on use. Does not recreate the symbols.
+
+# Arguments
+- `al::Algebra`
+
+"""
+function change_algebra(al::Algebra)
+    global gb_current_algebra = al
+end
+
+"""
     create_special_symbols()
 
 Create and add to REPL the special symbols for this Algebra, such as
