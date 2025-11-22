@@ -197,5 +197,5 @@ function Base.getproperty(ga::Algebra, name::Symbol)
     return ga.blades[name]
 end
 
-# Global Variable for exporting the current Algebra
+# Global Variable for exporting the current_algebra
 create_algebra(0)

@@ -2,8 +2,11 @@ include("../src/MinGal.jl")
 using .MinGal
 using Test
 
+Complex = Algebra(0,1,0,["i"])
+R2 = Algebra(2,0,0,["i","j"])
+
 @testset "Complex Tests" begin
-    Complex = Algebra(0,1,0,["i"])
+    change_algebra(Complex)
     @test i*i == -1*id
     @test 5*i*i*i == -5*i
     @test (1+i)*(1+i) == 2*i
@@ -13,7 +16,7 @@ using Test
 end
 
 @testset "R2 Tests" begin
-    R2 = Algebra(2,0,0,["i","j"])
+    change_algebra(R2)
     @test i^i == 0*id
     @test i\j == 0*id
     @test i^j == ij
@@ -36,8 +39,8 @@ end
     @test isdefined(Main, :id)
     @test isdefined(Main, :eI)
 
-    symbols_custom = ["", "a", "b", "c"]
-    MinGal.create_symbols(symbols_custom)
+    al = MinGal.create_algebra(4, 0, 0, ["", "a", "b", "c"])
+    MinGal.create_symbols(al)
     @test isdefined(Main, :a)
     @test isdefined(Main, :b)
     @test isdefined(Main, :c)
@@ -45,7 +48,8 @@ end
     @test isa(b, Multivector)
     @test isa(c, Multivector)
 
-    MinGal.create_symbols_min(["x", "y", "z"])
+    al = MinGal.create_algebra(3, 0, 0, ["x", "y", "z"])
+    MinGal.create_symbols_min(al)
     @test isdefined(Main, :x)
     @test isdefined(Main, :y)
     @test isdefined(Main, :z)
@@ -54,6 +58,3 @@ end
     @test isa(z, Multivector)
 
 end
-
-### Problems in changing algebra
-### WARNING: redefinition of constant i. This may fail, cause incorrect answers, or produce other errors.

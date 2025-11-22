@@ -3,13 +3,25 @@ include("OperatorOverloading.jl")
 """
     change_algebra(al::Algebra)
 
-Change with safety the algebra on use. Does not recreate the symbols.
+Change the algebra REPL symbols on use. Not recomended because of time complexity.
+Prefer using dot notation when working with multiple algebras.
 
 # Arguments
 - `al::Algebra`
 
 """
 function change_algebra(al::Algebra)
+    #TODO nova documentação e TESTES
+    if typeof(al.max) == BigInt
+        if al.p+ al.q + al.r >= 50000
+            create_special_symbols(al)
+        else
+            create_symbols_min(al)
+        end
+    else
+        create_symbols(al)
+    end
+
     global gb_current_algebra = al
 end
 
@@ -22,16 +34,17 @@ the "id" for scalar GAType grade 0 and "eI" for the pseudoscalar of the space.
 """
 function create_special_symbols(al::Algebra)
 
-    eval(:(id = Multivector([0], [1])))
+    mv1 = Multivector([0], [1], al)
+    mv2 = Multivector([al.max-1], [1], al)
+
+    al.blades[:id] = mv1
+    al.blades[:eI] = mv2
+
+    eval(:(id = $mv1))
     eval(:(export id))
-    eval(:(eI = Multivector([gb_current_algebra.max-1], [1])))
+    eval(:(eI = $mv2))
     eval(:(export eI))
-    
-    al.blades[:id] = Multivector([0], [1], al)
-    al.blades[:eI] = Multivector([al.max-1], [1], al)
-    
-    gb_current_algebra.blades[:id] = Multivector([0], [1])
-    gb_current_algebra.blades[:eI] = Multivector([gb_current_algebra.max-1], [1])
+
 end
 
 """
@@ -43,9 +56,10 @@ Create and add to REPL all the (custom or basis) symbols for this Algebra.
 - `string_symbols::Vector{String}` : An array with all the custom or basis symbols.
 
 """
-function create_symbols(string_symbols::Vector{String}, al::Algebra)
+function create_symbols(al::Algebra)
 
     symbol_array = []
+    string_symbols = al.basis_bit_order
 
     for i in eachindex(string_symbols)
         if i == 1
@@ -56,8 +70,8 @@ function create_symbols(string_symbols::Vector{String}, al::Algebra)
 
     for k in eachindex(symbol_array)
         symbol = symbol_array[k]
-        mv = Multivector([k], [1])
-        al.blades[symbol] = Multivector([k], [1], al)
+        mv = Multivector([k], [1], al)
+        al.blades[symbol] = mv
         eval(:($symbol = $mv))
         eval(:(export $symbol))
     end
@@ -75,9 +89,10 @@ only the canonical basis blades symbols no combination between then.
 - `string_symbols::Vector{String}` : An array with all the custom or basis symbols.
 
 """
-function create_symbols_min(string_symbols::Vector{String}, al::Algebra)
+function create_symbols_min(al::Algebra)
 
     symbol_array = []
+    string_symbols = al.symbols
 
     for i in eachindex(string_symbols)
         push!(symbol_array, Symbol(string_symbols[i]))
@@ -87,13 +102,13 @@ function create_symbols_min(string_symbols::Vector{String}, al::Algebra)
         symbol = symbol_array[k]
 
         if typeof(al.max) == BigInt
-            mv = Multivector([BigInt(1)<<(k-1)], [1])
+            mv = Multivector([BigInt(1)<<(k-1)], [1], al)
+            al.blades[symbol] = mv
             eval(:($symbol = $mv))
-            al.blades[symbol] = Multivector([BigInt(1)<<(k-1)], [1], al)
         else
-            mv = Multivector([1<<(k-1)], [1])
+            mv = Multivector([1<<(k-1)], [1], al)
+            al.blades[symbol] = mv
             eval(:($symbol = $mv))
-            al.blades[symbol] = Multivector([1<<(k-1)], [1], al)
         end
         
         eval(:(export $symbol))
@@ -125,16 +140,16 @@ function Algebra(p = 0, q = 0, r = 0, symbols = nothing, type = nothing)::Algebr
     if type !== nothing
 
         if type == "full"
-            Al = deepcopy(create_algebra(p, q, r, symbols))
-            create_symbols(Al.basis_bit_order, Al)
+            al = create_algebra(p, q, r, symbols)
+            create_symbols(al)
 
         elseif type == "min"
-            Al = deepcopy(create_algebra_min(p, q, r))
-            create_symbols_min(Al.symbols, Al)
+            al = create_algebra_min(p, q, r)
+            create_symbols_min(al)
 
         elseif type == "special"
-            Al = deepcopy(create_algebra_min(p, q, r))
-            create_special_symbols(Al)
+            al = create_algebra_min(p, q, r)
+            create_special_symbols(al)
 
         else
             throw(Error(type, "Type does not exist."))
@@ -142,19 +157,19 @@ function Algebra(p = 0, q = 0, r = 0, symbols = nothing, type = nothing)::Algebr
         
     else
         if p+q+r >= 15
-            Al = deepcopy(create_algebra_min(p, q, r))
+            al = create_algebra_min(p, q, r)
             
             if(p+q+r <= 50000)
-                create_symbols_min(Al.symbols, Al)
+                create_symbols_min(al)
             else
-                create_special_symbols(Al)
+                create_special_symbols(al)
             end
 
         else
-            Al = deepcopy(create_algebra(p, q, r, symbols))
-            create_symbols(Al.basis_bit_order, Al)
+            al = create_algebra(p, q, r, symbols)
+            create_symbols(al)
         end
     end
 
-    return Al
+    return al
 end

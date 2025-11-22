@@ -18,7 +18,7 @@ basis blades and their scalars.
 """
 struct Blade <: GAType
     blade_array::SparseArrays.SparseVector{Number, Integer}
-    algebra::Algebra
+    algebra::Algebra # That's an actual shitty design choice, might change
 end
 
 """
@@ -33,7 +33,7 @@ basis blades and their scalars.
 """
 struct Multivector <: GAType
     blade_array::SparseArrays.SparseVector{Number, Integer}
-    algebra::Algebra
+    algebra::Algebra # That's an actual shitty design choice, might change
 end
 
 function Base.length(mv::GAType)::Integer

@@ -160,7 +160,7 @@ The result GAType.
 """
 function product_by_scalar(mv::GAType, k::Number)::GAType
     result = sparsevec(mv.blade_array.nzind, k .* mv.blade_array.nzval, mv.algebra.max)
-    return Multivector(result, mi.algebra)
+    return Multivector(result, mv.algebra)
 end
 
 """

@@ -1,6 +1,6 @@
 using MinGal
 
-Algebra(2)
+R2 = Algebra(2)
 
 function point(x, y)
     return x*e1 + y*e2
