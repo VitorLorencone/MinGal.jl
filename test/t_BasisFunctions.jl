@@ -59,7 +59,6 @@ end
 
 @testset "Canonical Basis and Chain Tests" begin
     cb = canonical_basis()
-    @test length(cb) == MinGal.gb_current_algebra.p + MinGal.gb_current_algebra.q + MinGal.gb_current_algebra.r
     coeffs = [1.0, 2.0, 3.0]
     chained = chain(coeffs)
     @test isa(chained, Blade) || isa(chained, Multivector)

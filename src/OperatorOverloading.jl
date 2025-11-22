@@ -41,10 +41,10 @@ function Base.:\(mi::GAType, mj::GAType)::GAType
     return inner_product(mi,mj)
 end
 function Base.:\(mi::GAType, mj::Number)::GAType
-    return inner_product(mi, Blade(mj))
+    return inner_product(mi, Blade(mj, mi.algebra))
 end
 function Base.:\(mi::Number, mj::GAType)::GAType
-    return inner_product(Blade(mi), mj)
+    return inner_product(Blade(mi, mj.algebra), mj)
 end
 
 # ^ Outer Product
@@ -52,12 +52,12 @@ function Base.:^(mi::GAType, mj::GAType)::GAType
     return outer_product(mi,mj)
 end
 function Base.:^(mi::Number, mj::GAType)::GAType
-    return inner_product(Blade(mi), mj)
+    return inner_product(Blade(mi, mj.algebra), mj)
 end
 
 # ^ Exponentiation
 function Base.:^(mi::GAType, mj::Number)::GAType
-    result = Multivector([0],[1])
+    result = Multivector([0], [1], mi.algebra)
     for _ in 1:mj
         result = geometric_product(result, mi)
     end
@@ -74,20 +74,20 @@ function Base.:(==)(mi::GAType, mj::GAType)::Bool
     return mi.blade_array == mj.blade_array
 end
 function Base.:(==)(mi::GAType, mj::Number)::Bool
-    return mi.blade_array == Blade(mj).blade_array
+    return mi.blade_array == Blade(mj, mi.algebra).blade_array
 end
 function Base.:(==)(mi::Number, mj::GAType)::Bool
-    return Blade(mi).blade_array == mj.blade_array
+    return Blade(mi, mj.algebra).blade_array == mj.blade_array
 end
 
 function Base.:(!=)(mi::GAType, mj::GAType)::Bool
     return mi.blade_array != mj.blade_array
 end
 function Base.:(!=)(mi::GAType, mj::Number)::Bool
-    return mi.blade_array != Blade(mj).blade_array
+    return mi.blade_array != Blade(mj, mi.algebra).blade_array
 end
 function Base.:(!=)(mi::Number, mj::GAType)::Bool
-    return Blade(mi).blade_array != mj.blade_array
+    return Blade(mi, mj.algebra).blade_array != mj.blade_array
 end
 
 # - minus
@@ -100,10 +100,10 @@ function Base.:+(mi::GAType, mj::GAType)::GAType
     return multivector_sum(mi, mj)
 end
 function Base.:+(k::Number, mv::GAType)::GAType
-    return multivector_sum(Blade(0, k), mv)
+    return multivector_sum(Blade(0, k, mv.algebra), mv)
 end
 function Base.:+(mv::GAType, k::Number)::GAType
-    return multivector_sum(Blade(0, k), mv)
+    return multivector_sum(Blade(0, k, mv.algebra), mv)
 end
 
 # - sub
@@ -111,10 +111,10 @@ function Base.:-(mi::GAType, mj::GAType)::GAType
     return multivector_sub(mi, mj)
 end
 function Base.:-(k::Number, mv::GAType)::GAType
-    return multivector_sub(Blade(0, k), mv)
+    return multivector_sub(Blade(0, k, mv.algebra), mv)
 end
 function Base.:-(mv::GAType, k::Number)::GAType
-    return multivector_sub(mv, Blade(0, k))
+    return multivector_sub(mv, Blade(0, k, mv.algebra))
 end
 
 # ~ reverse
@@ -132,10 +132,10 @@ function Base.:(<<)(mi::GAType, mj::GAType)::GAType
     left_contraction(mi, mj)
 end
 function Base.:(<<)(mi::Number, mj::GAType)::GAType
-    left_contraction(Blade(mi), mj)
+    left_contraction(Blade(mi, mj.algebra), mj)
 end
 function Base.:(<<)(mi::GAType, mj::Number)::GAType
-    left_contraction(mi, Blade(mj))
+    left_contraction(mi, Blade(mj, mi.algebra))
 end
 
 # >> right contraction
@@ -143,10 +143,10 @@ function Base.:(>>)(mi::GAType, mj::GAType)::GAType
     right_contraction(mi, mj)
 end
 function Base.:(>>)(mi::Number, mj::GAType)::GAType
-    right_contraction(Blade(mi), mj)
+    right_contraction(Blade(mi, mj.algebra), mj)
 end
 function Base.:(>>)(mi::GAType, mj::Number)::GAType
-    right_contraction(mi, Blade(mj))
+    right_contraction(mi, Blade(mj, mi.algebra))
 end
 
 # & regressive product
@@ -154,8 +154,8 @@ function Base.:&(mi::GAType, mj::GAType)::GAType
     regressive_product(mi, mj)
 end
 function Base.:&(mi::Number, mj::GAType)::GAType
-    regressive_product(Blade(mi), mj)
+    regressive_product(Blade(mi, mj.algebra), mj)
 end
 function Base.:&(mi::GAType, mj::Number)::GAType
-    regressive_product(mi, Blade(mj))
+    regressive_product(mi, Blade(mj, mi.algebra))
 end

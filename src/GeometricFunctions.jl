@@ -51,7 +51,7 @@ function geometric_product(ei::Blade, ej::Blade)::Multivector
     i = 1
     while meet != 0
         if (meet & 1) != 0
-            scalar_value *= gb_current_algebra.metric[i]
+            scalar_value *= ei.algebra.metric[i]
         end
         i += 1
         meet = meet >> 1
@@ -75,7 +75,7 @@ The result Blade.
 """
 function outer_product(ei::Blade, ej::Blade)::Multivector
     if bitmap(ei) & bitmap(ej) != 0
-        return Multivector([0],[0])
+        return Multivector([0], [0], ei.algebra)
     end
 
     bitmap_value::Number = bitmap(ei) ⊻ bitmap(ej)
@@ -124,7 +124,7 @@ The result Multivector.
 """
 function multivector_sum(mi::GAType, mj::GAType)::GAType
     result = sparsevec_operate(Base.:+, mi.blade_array, mj.blade_array)
-    return Multivector(result)
+    return Multivector(result, mi.algebra)
 end
 
 """
@@ -142,7 +142,7 @@ The result GAType.
 """
 function multivector_sub(mi::GAType, mj::GAType)::GAType
     result = sparsevec_operate(Base.:-, mi.blade_array, mj.blade_array)
-    return Multivector(result)
+    return Multivector(result, mi.algebra)
 end
 
 """
@@ -159,8 +159,8 @@ The result GAType.
 
 """
 function product_by_scalar(mv::GAType, k::Number)::GAType
-    result = sparsevec(mv.blade_array.nzind, k .* mv.blade_array.nzval, gb_current_algebra.max)
-    return Multivector(result)
+    result = sparsevec(mv.blade_array.nzind, k .* mv.blade_array.nzval, mv.algebra.max)
+    return Multivector(result, mv.algebra)
 end
 
 """
@@ -177,7 +177,7 @@ The result GAType.
 
 """
 function geometric_product(ei::GAType, ej::GAType)::GAType
-    result = Multivector([0],[0])
+    result = Multivector([0], [0], ei.algebra)
     # x and y are both Blade types
     for x in ei
         for y in ej
@@ -202,7 +202,7 @@ The result GAType.
 
 """
 function outer_product(ei::GAType, ej::GAType)::GAType    
-    result = Multivector([0],[0])
+    result = Multivector([0], [0], ei.algebra)
     # x and y are both Blade types
     for x in ei
         for y in ej
@@ -227,7 +227,7 @@ The result GAType.
 
 """
 function inner_product(ei::GAType, ej::GAType)::GAType
-    result = Multivector([0],[0])
+    result = Multivector([0], [0], ei.algebra)
     # x and y are both Blade types
     for x in ei
         for y in ej
@@ -251,7 +251,7 @@ The reverse of ei.
 
 """
 function revert(ei::GAType)::GAType
-    result = Multivector([0],[0])
+    result = Multivector([0], [0], ei.algebra)
     for x in ei
         k = grade(x)
         result += (-1)^(k*(k-1)/2) * x
@@ -272,7 +272,7 @@ The conjugate of ei.
 
 """
 function conjugate(ei::GAType)::GAType
-    result = Multivector([0],[0])
+    result = Multivector([0], [0], ei.algebra)
     for x in ei
         k = grade(x)
         r = grade_minus(x)
@@ -294,7 +294,7 @@ The Clifford Conjugate of ei.
 
 """
 function clifford_conjugation(ei::GAType)::GAType
-    result = Multivector([0],[0])
+    result = Multivector([0], [0], ei.algebra)
     for x in ei
         k = grade(x)
         result += (-1)^(k*(k+1)/2) * x
@@ -315,7 +315,7 @@ The grade involution of ei.
 
 """
 function grade_involution(ei::GAType)::GAType
-    result = Multivector([0],[0])
+    result = Multivector([0], [0], ei.algebra)
     for x in ei
         k = grade(x)
         result += (-1)^(k) * x
@@ -340,11 +340,11 @@ function left_contraction(ei::Blade, ej::Blade)::Multivector
     if grade(ei) <= grade(ej)
         return grade_projection(ei*ej, grade(ej) - grade(ei))
     end
-    return Multivector([0],[0])
+    return Multivector([0], [0], ei.algebra)
 end
 
 function left_contraction(ei::GAType, ej::GAType)::GAType
-    result = Multivector([0],[0])
+    result = Multivector([0], [0], ei.algebra)
     for x in ei
         for y in ej
             result += left_contraction(x, y)
@@ -371,11 +371,11 @@ function right_contraction(ei::Blade, ej::Blade)::Multivector
     if grade(ei) >= grade(ej)
         return grade_projection(ei*ej, grade(ei) - grade(ej))
     end
-    return Multivector([0], [0])
+    return Multivector([0], [0], ei.algebra)
 end
 
 function right_contraction(ei::GAType, ej::GAType)::GAType
-    result = Multivector([0],[0])
+    result = Multivector([0], [0], ei.algebra)
     for x in ei
         for y in ej
             result += right_contraction(x, y)
@@ -400,7 +400,7 @@ The result GAType.
 
 """
 function grade_selection(ei::GAType, k::Number)::GAType
-    result = Multivector([0],[0])
+    result = Multivector([0], [0], ei.algebra)
     for bl in ei
         if grade(bl) == k
             result += bl
@@ -448,20 +448,20 @@ The dual of ei.
 
 """
 function dual(ei::GAType)::GAType
-    if gb_current_algebra.r == 0
+    if ei.algebra.r == 0
         # Polarity
-        key = gb_current_algebra.max-1
-        I = Multivector([key], [1])
-        return ei*I*canonical_reordering_sign(Blade(key, 1), Blade(key, 1)) 
+        key = ei.algebra.max-1
+        I = Multivector([key], [1], ei.algebra)
+        return ei*I*canonical_reordering_sign(Blade(key, 1, ei.algebra), Blade(key, 1, ei.algebra)) 
     else
         # Hodge
-        result = Multivector([0], [0])
-        n = gb_current_algebra.max
+        result = Multivector([0], [0], ei.algebra)
+        n = ei.algebra.max
         for i in ei
             key = bitmap(i)
             value = scalar(i)
             dual_index = n - key - 1
-            sign = canonical_reordering_sign(Blade(key, 1), Blade(dual_index, 1))
+            sign = canonical_reordering_sign(Blade(key, 1, ei.algebra), Blade(dual_index, 1, ei.algebra))
             if sign < 0
                 result[dual_index] = -value
             else
@@ -487,19 +487,19 @@ The undual of ei.
 
 """
 function undual(ei::GAType)::GAType
-    if gb_current_algebra.r == 0
+    if ei.algebra.r == 0
         # Polarity
-        I = Multivector([gb_current_algebra.max-1], [1])
+        I = Multivector([ei.algebra.max-1], [1], ei.algebra)
         return ei<<I
     else
         # Hodge
-        result = Multivector([0], [0])
-        n = gb_current_algebra.max
+        result = Multivector([0], [0], ei.algebra)
+        n = ei.algebra.max
         for i in ei
             key = bitmap(i)
             value = scalar(i)
             dual_index = n - key - 1
-            sign = canonical_reordering_sign(Blade(dual_index, 1), Blade(key, 1))
+            sign = canonical_reordering_sign(Blade(dual_index, 1, ei.algebra), Blade(key, 1, ei.algebra))
             if sign < 0
                 result[dual_index] = -value
             else
@@ -528,7 +528,7 @@ function regressive_product(ei::Blade, ej::Blade)::Multivector
 end
 
 function regressive_product(ei::GAType, ej::GAType)::GAType
-    result = Multivector([0],[0])
+    result = Multivector([0], [0], ei.algebra)
     for x in ei
         for y in ej
             result += regressive_product(x, y)
@@ -618,7 +618,7 @@ The norm of ei.
 
 """
 function norm(ei::GAType)::Number
-    if gb_current_algebra.r == 0
+    if ei.algebra.r == 0
         return conjugate_norm(ei)
     else
         return euclidean_norm(ei)

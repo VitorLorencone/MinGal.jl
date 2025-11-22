@@ -71,7 +71,7 @@ function describe(al::AlgebraFull)
     println("- q: $(al.q)")
     println("- r: $(al.r)")
     println("- basis_bit_order: $(al.basis_bit_order)")
-    println("- metric: $(al.metric)")
+    print("- metric: $(al.metric)")
 end
 
 function describe(al::AlgebraMin)
@@ -80,7 +80,7 @@ function describe(al::AlgebraMin)
     println("- q: $(al.q)")
     println("- r: $(al.r)")
     println("- symbols: $(al.symbols)")
-    println("- metric: $(al.metric)")
+    print("- metric: $(al.metric)")
 end
 
 function Base.show(io::IO, al::AlgebraFull)
@@ -88,7 +88,7 @@ function Base.show(io::IO, al::AlgebraFull)
     println("- p: $(al.p)")
     println("- q: $(al.q)")
     println("- r: $(al.r)")
-    println("- basis_bit_order: $(al.basis_bit_order)")
+    print("- basis_bit_order: $(al.basis_bit_order)")
 end
 
 function Base.show(io::IO, al::AlgebraMin)
@@ -197,5 +197,5 @@ function Base.getproperty(ga::Algebra, name::Symbol)
     return ga.blades[name]
 end
 
-# Global Variable for exporting the current Algebra
+# Global Variable for exporting the current_algebra
 create_algebra(0)
