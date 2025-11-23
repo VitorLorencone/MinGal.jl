@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/assets/logo-dark.png" alt="Logo" width="50%">
+  <img src="docs/assets/logo-dark.png" alt="Logo" width="30%">
 </p>
 
 # MinGal
