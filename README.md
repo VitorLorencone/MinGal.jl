@@ -1,6 +1,10 @@
-[![](https://img.shields.io/badge/docs-stable-blue.svg)](https://vitorlorencone.github.io/MinGal.jl/)
+<p align="center">
+  <img src="docs/assets/logo-dark.png" alt="Logo" width="50%">
+</p>
 
 # MinGal
+
+[![](https://img.shields.io/badge/docs-stable-blue.svg)](https://vitorlorencone.github.io/MinGal.jl/)
 
 *A Geometric Algebra library written in Julia*
 
