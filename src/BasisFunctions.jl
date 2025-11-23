@@ -229,12 +229,14 @@ The scalar value.
 """
 function set_scalar(mv::GAType, val::Number, k::Integer)
     mv.blade_array[k+1] = val
+    dropzeros!(mv.blade_array)
     return val
 end
 
 function set_scalar(mv::GAType, val::Number, ei::GAType)
     bl = Blade(ei)
     mv.blade_array[bitmap(bl)+1] = val
+    dropzeros!(mv.blade_array)
     return val
 end
 
@@ -256,6 +258,7 @@ True, if yes, False, if not.
 
 """
 function has_key(mv::GAType, k::Integer)::Bool
+    dropzeros!(mv.blade_array)
     if(get_scalar(mv, k) != 0)
         return true
     end
@@ -263,6 +266,7 @@ function has_key(mv::GAType, k::Integer)::Bool
 end
 
 function has_key(mv::GAType, ei::GAType)::Bool
+    dropzeros!(mv.blade_array)
     if(get_scalar(mv, ei) != 0)
         return true
     end

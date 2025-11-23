@@ -107,7 +107,6 @@ Returns the bitmap of the Blade
 The bitmap
 
 """
-
 function bitmap(bl::Blade)::Integer
     return bl.blade_array.nzind[1]-1
 end
@@ -117,20 +116,25 @@ function bitmap(mv::Multivector)::Integer
 end
 
 """
-    scalar(bl::Blade)::Number
+    scalar(bl::Blade)::Number||
+    scalar(mv::Multivector)::Number
 
-Returns the scalar of the Blade
+Returns the scalar of the GAType
 
 # Arguments
 - `bl::Blade`
+- `mv::Multivector`
 
 # Return
 The scalar
 
 """
-
 function scalar(bl::Blade)::Number
     return bl.blade_array.nzval[1]
+end
+
+function scalar(mv::Multivector)::Number
+    return mv[0]
 end
 
 """

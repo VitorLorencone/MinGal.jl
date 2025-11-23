@@ -8,68 +8,67 @@ mutable struct Point
     mv::GAType
 end
 
-mutable struct Line
+mutable struct Segment
     mv::GAType
     start_point::Point
     end_point::Point
 end
 
 # P = (x, y)
-point = (x, y) -> return Point(-x*e0e2 + y*e0e1 + e1e2)
+point = (x::Number, y::Number) -> return Point(-x*e0e2 + y*e0e1 + e1e2)
 
-# r: ax + by + c = 0
-line = (a, b, c) -> Line(a*e1 + b*e2 + c*e0, nothing, nothing)
+# S: Line from point `a` to point `b`
+segment = (a::Point, b::Point) -> return Segment(a.mv & b.mv, a, b)
 
 # -------------------------- Functions --------------------------
 
-function join_line(a::Point, b::Point)
-    res = a.mv & b.mv
-    return Line(res, a, b)
+# Translate Point 'a' by (tx,ty)
+function translate(a::Point, tx, ty)
+    T = 1 + (tx*e1 + ty*e2)*e0/2
+    return Point(T * a.mv * T^-1)
 end
 
-# Translate 'a' by (tx,ty)
-function translate(a, tx, ty)
-    t = tx*e1 + ty*e2
-    T = 1 + t*e0/2
-    return T * a * invert(T)
+# Translate Segment 'a' by (tx,ty)
+function translate(a::Segment, tx, ty)
+    T = 1 + (tx*e1 + ty*e2)*e0/2
+    return Segment(T*a.mv*T^-1, Point(T*a.start_point.mv*T^-1), Point(T*a.end_point.mv*T^-1))
 end
 
-# Rotate 'a' by an angle 'n' rad from the origin (0,0)
-function rotate(a, n)
-    rotor = exp_ga(-e1e2*n/2)
-    return rotor * a * invert(rotor)
+# Rotate Point 'a' by an angle 'n' rad from the origin (0,0)
+function rotate(a::Point, n)
+    R = exp_ga(-e1e2*n/2)
+    return Point(R * a.mv * R^-1)
+end
+
+# Rotate Segment 'a' by an angle 'n' rad from the origin (0,0)
+function rotate(a::Segment, n)
+    R = exp_ga(-e1e2*n/2)
+    return Segment(R*a.mv*R^-1, Point(R*a.start_point.mv*R^-1), Point(R*a.end_point.mv*R^-1))
 end
 
 # -------------------------- Scene --------------------------
 
+# Starts the scene
 fig = Figure()
 ax = Axis(fig[1,1])
 
 # Construct a house with segments
-objects = Line[]
-push!(objects, join_line(point(1, 2), point(1, 8)))
-push!(objects, join_line(point(1, 8), point(-3, 8)))
-push!(objects, join_line(point(-3, 8), point(-3, 2)))
-push!(objects, join_line(point(-3, 2), point(1, 2)))
-push!(objects, join_line(point(-3, 2), point(-6, 5)))
-push!(objects, join_line(point(-6, 5), point(-3, 8)))
-push!(objects, join_line(point(1, 6), point(-2, 6)))
-push!(objects, join_line(point(1, 4), point(-2, 4)))
-push!(objects, join_line(point(-2, 6), point(-2, 4)))
+objects = Segment[]
+push!(objects, segment(point(1, 2), point(1, 8)))
+push!(objects, segment(point(1, 8), point(-3, 8)))
+push!(objects, segment(point(-3, 8), point(-3, 2)))
+push!(objects, segment(point(-3, 2), point(1, 2)))
+push!(objects, segment(point(-3, 2), point(-6, 5)))
+push!(objects, segment(point(-6, 5), point(-3, 8)))
+push!(objects, segment(point(1, 6), point(-2, 6)))
+push!(objects, segment(point(1, 4), point(-2, 4)))
+push!(objects, segment(point(-2, 6), point(-2, 4)))
 
 # Translate everything (-1, -2) -> Origin
-for obj in objects
-    obj.mv = translate(obj.mv, -1, -2)
-    obj.start_point = Point(translate(obj.start_point.mv, -1, -2))
-    obj.end_point = Point(translate(obj.end_point.mv, -1, -2))
-end
+objects = map(a -> translate(a, -1, -2), objects)
 
 # Rotate everything -pi/2 rad -> Right direction
-for obj in objects
-    obj.mv = rotate(obj.mv, -pi/2)
-    obj.start_point = Point(rotate(obj.start_point.mv, -pi/2))
-    obj.end_point = Point(rotate(obj.end_point.mv, -pi/2))
-end
+objects = map(a -> rotate(a, -pi/2), objects)
 
 # Render everything with CairoMakie
 for obj in objects

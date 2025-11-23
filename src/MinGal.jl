@@ -1,7 +1,6 @@
 # TODO
 # -> Implement the multiplicative approach
 # -> Optimize some Geometric Functions
-# -> Update Docs and Tests
 # -> More examples
 
 module MinGal
