@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Shorthand Methods · MinGal</title><meta name="title" content="Shorthand Methods · MinGal"/><meta property="og:title" content="Shorthand Methods · MinGal"/><meta property="twitter:title" content="Shorthand Methods · MinGal"/><meta name="description" content="Documentation for MinGal."/><meta property="og:description" content="Documentation for MinGal."/><meta property="twitter:description" content="Documentation for MinGal."/><script data-outdated-warner src="../assets/warner.js"></script><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.050/juliamono.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.8/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL=".."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../assets/documenter.js"></script><script src="../search_index.js"></script><script src="../siteinfo.js"></script><script src="../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/catppuccin-mocha.css" data-theme-name="catppuccin-mocha"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/catppuccin-macchiato.css" data-theme-name="catppuccin-macchiato"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/catppuccin-frappe.css" data-theme-name="catppuccin-frappe"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/catppuccin-latte.css" data-theme-name="catppuccin-latte"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../assets/themeswap.js"></script><link href="../assets/favicon.ico" rel="icon" type="image/x-icon"/></head><body><div id="documenter"><nav class="docs-sidebar"><a class="docs-logo" href="../"><img class="docs-light-only" src="../assets/logo.png" alt="MinGal logo"/><img class="docs-dark-only" src="../assets/logo-dark.png" alt="MinGal logo"/></a><div class="docs-package-name"><span class="docs-autofit"><a href="../">MinGal</a></span></div><button class="docs-search-query input is-rounded is-small is-clickable my-2 mx-auto py-1 px-2" id="documenter-search-query">Search docs (Ctrl + /)</button><ul class="docs-menu"><li><a class="tocitem" href="../">Home</a></li><li><a class="tocitem" href="../design/">Design and Project</a></li><li><span class="tocitem">User Guide</span><ul><li><a class="tocitem" href="../install/">Installation</a></li><li><a class="tocitem" href="../quickstart/">Quick Start</a></li><li><a class="tocitem" href="../algebra/">Algebra</a></li><li><a class="tocitem" href="../objects/">Main Objects</a></li><li><a class="tocitem" href="../operations/">Geometric Operations</a></li><li class="is-active"><a class="tocitem" href>Shorthand Methods</a><ul class="internal"><li><a class="tocitem" href="#Selecting-Elements-on-a-Multivector"><span>Selecting Elements on a Multivector</span></a></li><li><a class="tocitem" href="#Setting-Elements-on-a-Multivector"><span>Setting Elements on a Multivector</span></a></li><li><a class="tocitem" href="#Key-and-Values"><span>Key and Values</span></a></li><li><a class="tocitem" href="#Size-and-Length"><span>Size and Length</span></a></li><li><a class="tocitem" href="#Iterating-over-a-Multivector"><span>Iterating over a Multivector</span></a></li></ul></li><li><a class="tocitem" href="../issues/">Issues and Limitations</a></li></ul></li><li><span class="tocitem">Examples and Applications</span><ul><li><a class="tocitem" href="../complex/">Complex and Real Spaces</a></li><li><a class="tocitem" href="../pga/">2D PGA Transformations</a></li><li><a class="tocitem" href="../linear/">Linear Systems</a></li></ul></li><li><a class="tocitem" href="../references/">Julia References</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><a class="docs-sidebar-button docs-navbar-link fa-solid fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a><nav class="breadcrumb"><ul class="is-hidden-mobile"><li><a class="is-disabled">User Guide</a></li><li class="is-active"><a href>Shorthand Methods</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Shorthand Methods</a></li></ul></nav><div class="docs-right"><a class="docs-navbar-link" href="https://github.com/VitorLorencone/MinGal.jl" title="View the repository on GitHub"><span class="docs-icon fa-brands"></span><span class="docs-label is-hidden-touch">GitHub</span></a><a class="docs-navbar-link" href="https://github.com/VitorLorencone/MinGal.jl/blob/main/documenter/src/shorthand.md" title="Edit source on GitHub"><span class="docs-icon fa-solid"></span></a><a class="docs-settings-button docs-navbar-link fa-solid fa-gear" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-article-toggle-button fa-solid fa-chevron-up" id="documenter-article-toggle-button" href="javascript:;" title="Collapse all docstrings"></a></div></header><article class="content" id="documenter-page"><h1 id="Shorthand-Methods"><a class="docs-heading-anchor" href="#Shorthand-Methods">Shorthand Methods</a><a id="Shorthand-Methods-1"></a><a class="docs-heading-anchor-permalink" href="#Shorthand-Methods" title="Permalink"></a></h1><p>Here we will learn about some ways to write expressions, notations, and constructions of basic structures in a more compact form, assisted by MinGal.</p><h2 id="Selecting-Elements-on-a-Multivector"><a class="docs-heading-anchor" href="#Selecting-Elements-on-a-Multivector">Selecting Elements on a Multivector</a><a id="Selecting-Elements-on-a-Multivector-1"></a><a class="docs-heading-anchor-permalink" href="#Selecting-Elements-on-a-Multivector" title="Permalink"></a></h2><p>When working with <a href="../references/#Main.MinGal.Multivector">Multivectors</a> you will notice the need to select a specific element, such as a blade, grade, scalar, and so on. Below I list some ways to make this selection:</p><p>The first and most direct way is to choose the element by its <strong>index</strong> in <strong>bit-order notation</strong>, simply by using bracket notation <code>[k]</code>. However, since this notation is difficult to understand, it is usually not used in practice. Selection in this form begins with the grade-0 blade (the scalar) always at index 0. Thus, it is a viable option if you only want the scalar value of a multivector, but it is also worth noting that the function <a href="../references/#Main.MinGal.scalar-Tuple{Blade}">scalar</a> does exactly that.</p><pre><code class="language- hljs">julia&gt; Algebra(3)
+
+julia&gt; a = -1 + e1 + 2*e2 + 3*e3 + 4*e1e2 + 5*e1e3 + 6*e2e3 + 7*e1e2e3
+- 1 + 1.0*e1 + 2.0*e2 + 4.0*e1e2 + 3.0*e3 + 5.0*e1e3 + 6.0*e2e3 + 7.0*e1e2e3 # Bit-Order
+
+julia&gt; a[0] # Scalar
+-1
+
+julia&gt; scalar(a)
+-1
+
+julia&gt; a[1] # e1
+1
+
+julia&gt; a[2] # e2
+2
+
+julia&gt; a[3] # e1e2
+4</code></pre><p>Another way to do the same thing is to apply the Multivector element inside the brackets, making it easier to understand and to select the scalars of each constituent blade.</p><pre><code class="language- hljs">julia&gt; Algebra(3)
+
+julia&gt; a = -1 + e1 + 2*e2 + 3*e3 + 4*e1e2 + 5*e1e3 + 6*e2e3 + 7*e1e2e3
+
+julia&gt; a[id] # Scalar
+-1
+
+julia&gt; a[e1]
+1
+
+julia&gt; a[e2e3]
+6</code></pre><p>Finally, grade selection has a dedicated function for this, <a href="../references/#Main.MinGal.grade_selection-Tuple{GAType, Number}">grade_selection</a>, which selects all blades of a given grade.</p><pre><code class="language- hljs">julia&gt; Algebra(3)
+
+julia&gt; a = -1 + e1 + 2*e2 + 3*e3 + 4*e1e2 + 5*e1e3 + 6*e2e3 + 7*e1e2e3
+
+julia&gt; grade_selection(a, 0)
+- 1
+
+julia&gt; grade_selection(a, 1)
+1.0*e1 + 2.0*e2 + 3.0*e3
+
+julia&gt; grade_selection(a, 2)
+4.0*e1e2 + 5.0*e1e3 + 6.0*e2e3
+
+julia&gt; grade_selection(a, 3)
+7.0*e1e2e3</code></pre><h2 id="Setting-Elements-on-a-Multivector"><a class="docs-heading-anchor" href="#Setting-Elements-on-a-Multivector">Setting Elements on a Multivector</a><a id="Setting-Elements-on-a-Multivector-1"></a><a class="docs-heading-anchor-permalink" href="#Setting-Elements-on-a-Multivector" title="Permalink"></a></h2><p>As described in the section above, the same constructions can be used, as can be seen in the example below:</p><pre><code class="language- hljs">julia&gt; Algebra(3)
+
+julia&gt; a = -1 + e1 + 2*e2 + 3*e3 + 4*e1e2 + 5*e1e3 + 6*e2e3 + 7*e1e2e3
+
+julia&gt; a[0] = 3
+3 + 1.0*e1 + 2.0*e2 + 4.0*e1e2 + 3.0*e3 + 5.0*e1e3 + 6.0*e2e3 + 7.0*e1e2e3
+
+julia&gt; a[e1e2] = 0
+3 + 1.0*e1 + 2.0*e2 + 3.0*e3 + 5.0*e1e3 + 6.0*e2e3 + 7.0*e1e2e3</code></pre><h2 id="Key-and-Values"><a class="docs-heading-anchor" href="#Key-and-Values">Key and Values</a><a id="Key-and-Values-1"></a><a class="docs-heading-anchor-permalink" href="#Key-and-Values" title="Permalink"></a></h2><p>In order to verify the existence of elements and their values in a Multivector, we can use the special functions below. Furthermore, they provide possibilities for more controlled iteration when needed.</p><p>The <code>keys</code> function returns the indices in <strong>bit-order</strong> of all elements present in the multivector’s internal structure. The <code>values</code> function does the same, in the same order, but with the values associated with each of those indices, that is, the scalar value of each key.</p><pre><code class="language- hljs">julia&gt; Algebra(3)
+
+julia&gt; a = -1 + e1 + 2*e2 + e2e3 + 7*e1e2e3
+
+julia&gt; keys(a)
+[0, 1, 2, 6, 7]
+
+julia&gt; values(a)
+[-1, 1, 2, 1, 7]
+
+julia&gt; res = 0
+julia&gt; for (i, val) in zip(keys(a), values(a))
+           res += Blade(i, val)
+       end
+
+julia&gt; res
+- 1 + 1.0*e1 + 2.0*e2 + 1.0*e2e3 + 7.0*e1e2e3</code></pre><p>Finally, we can check whether a key exists using the <code>haskey</code> function. It works both with the numeric index and with the written representation of the corresponding multivector.</p><pre><code class="language- hljs">julia&gt; Algebra(3)
+
+julia&gt; a = -1 + e1 + 2*e2 + e2e3 + 7*e1e2e3
+
+julia&gt; haskey(a, 1) # e1
+true
+
+julia&gt; haskey(a, e1e3)
+false
+
+julia&gt; haskey(a, eI)
+true</code></pre><h2 id="Size-and-Length"><a class="docs-heading-anchor" href="#Size-and-Length">Size and Length</a><a id="Size-and-Length-1"></a><a class="docs-heading-anchor-permalink" href="#Size-and-Length" title="Permalink"></a></h2><p>Two useful functions allow you to determine the number of elements in a multivector and also its maximum possible size. The <code>size</code> function is more internal and always returns the maximum value for the algebra of that multivector. The <code>length</code> function, on the other hand, returns the number of elements currently present in the multivector’s internal structure at the moment it is called.</p><pre><code class="language- hljs">julia&gt; Algebra(3)
+
+julia&gt; a = -1 + e1 + 2*e2 + e2e3 + 7*e1e2e3
+
+julia&gt; size(a)
+8
+
+julia&gt; length(a)
+5
+
+julia&gt; a += 1 - e1
+
+julia&gt; length(a)
+3</code></pre><h2 id="Iterating-over-a-Multivector"><a class="docs-heading-anchor" href="#Iterating-over-a-Multivector">Iterating over a Multivector</a><a id="Iterating-over-a-Multivector-1"></a><a class="docs-heading-anchor-permalink" href="#Iterating-over-a-Multivector" title="Permalink"></a></h2><p>In short, iterating over multivectors is quite simple and can be done in several ways, as demonstrated above. However, in a more simplified manner, we can do:</p><pre><code class="language- hljs">julia&gt; Algebra(3)
+
+julia&gt; a = -1 + e1 + 2*e2 + e2e3 + 7*e1e2e3
+
+julia&gt; for blade in a
+           println(blade)
+       end
+- 1
+1.0*e1
+2.0*e2
+1.0*e2e3
+7.0*e1e2e3</code></pre><p>If you want to iterate only over the canonical basis blades of an algebra, you can use the function <a href="../references/#Main.MinGal.canonical_basis">canonical_basis</a>, thus it is also possible to write:</p><pre><code class="language- hljs">julia&gt; al = Algebra(3)
+
+julia&gt; for blade in canonical_basis(al)
+           println(blade)
+       end
+1.0*e1
+1.0*e2
+1.0*e3
+
+julia&gt; for (index, blade) in pairs(canonical_basis())
+           println(index*blade)
+       end
+1.0*e1
+2.0*e2
+3.0*e3</code></pre><p>Furthermore, if you need greater control over the entire set of basis blades of an algebra, you can, in a slightly more complex manner, use bit manipulation by shifting the bit-order index to return the element you want. You can also simply proceed as you normally would, for example:</p><pre><code class="language- hljs">julia&gt; al = Algebra(3)
+julia&gt; n = al.p + al.q + al.r
+
+julia&gt; for i in 0:(al.max-1)
+           println(Blade(i,1))
+       end
+1
+1.0*e1
+1.0*e2
+1.0*e1e2
+1.0*e3
+1.0*e1e3
+1.0*e2e3
+1.0*e1e2e3
+
+julia&gt; for j in 1:n
+           println(Blade(1&lt;&lt;(j-1),1))
+       end
+1.0*e1
+1.0*e2
+1.0*e3</code></pre><p>If it is necessary to iterate over a <code>GAVector</code> or similar structures in order to combine all elements into a single operation, a simpler alternative to using a basic <code>for</code> loop is to apply Julia’s <code>reduce</code> method to simplify the process, which is very useful in various geometric algebra computations.</p><pre><code class="language- hljs">julia&gt; Algebra(3)
+
+julia&gt; vec = [e1, e3, e2, id] 
+
+julia&gt; typeof(vec) &lt;: GAVector
+true
+
+julia&gt; reduce(^, vec; init=Blade(1)) # same as e1^e3^e2^id
+- 1.0*e1e2e3</code></pre><p>Finally, the <a href="../references/#Main.MinGal.chain">chain</a> method is also useful for helping associate a vector of elements with the canonical basis vectors, which is very handy for converting matrix rows into geometric-algebra multivectors.</p><pre><code class="language- hljs">julia&gt; Algebra(3)
+
+julia&gt; vec = [1, 2, 3]
+
+julia&gt; chain(vec)
+1.0*e1 + 2.0*e2 + 3.0*e3</code></pre></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../operations/">« Geometric Operations</a><a class="docs-footer-nextpage" href="../issues/">Issues and Limitations »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.15.0 on <span class="colophon-date" title="Sunday 23 November 2025 02:40">Sunday 23 November 2025</span>. Using Julia version 1.12.1.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
